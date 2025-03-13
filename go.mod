@@ -1,8 +1,13 @@
 module github.com/katallaxie/m
 
-go 1.24
+go 1.24.0
 
-require github.com/spf13/cobra v1.9.1
+toolchain go1.24.1
+
+require (
+	github.com/ollama/ollama v0.6.0
+	github.com/spf13/cobra v1.9.1
+)
 
 require (
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect

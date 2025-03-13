@@ -20,21 +20,19 @@ func NewFlags() *Flags {
 // Config contains the configuration.
 type Config struct {
 	// Flags ...
-	Flags *Flags
+	Flags Flags
 
 	sync.RWMutex `json:"-" yaml:"-"`
 }
 
 // New returns a new config.
 func New() *Config {
-	return &Config{
-		Flags: &Flags{},
-	}
+	return &Config{}
 }
 
 // Default returns the default configuration.
-func Default() *Config {
-	return &Config{}
+func Default() Config {
+	return Config{}
 }
 
 // HomeDir returns the home directory.

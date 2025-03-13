@@ -32,11 +32,13 @@ var RootCmd = &cobra.Command{
 	Use:   "m",
 	Short: "m",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return runRoot(cmd.Context())
+		return runRoot(cmd.Context(), args...)
 	},
 	Version: fmt.Sprintf(versionFmt, version, commit, date),
 }
 
-func runRoot(ctx context.Context) error {
+func runRoot(ctx context.Context, args ...string) error {
+	fmt.Println(args)
+
 	return nil
 }
