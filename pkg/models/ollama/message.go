@@ -1,4 +1,6 @@
 package ollama
 
 // Message is a message.
-type Message struct{}
+type Message struct {
+	Value string
+}

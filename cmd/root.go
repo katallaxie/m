@@ -5,6 +5,8 @@ import (
 	"fmt"
 
 	"github.com/katallaxie/m/internal/config"
+	"github.com/katallaxie/m/pkg/messages"
+	"github.com/katallaxie/m/pkg/models/ollama"
 
 	"github.com/spf13/cobra"
 )
@@ -38,7 +40,20 @@ var RootCmd = &cobra.Command{
 }
 
 func runRoot(ctx context.Context, args ...string) error {
-	fmt.Println(args)
+	api, err := ollama.New[string](ollama.WithBaseURL("http://localhost:7869"))
+	if err != nil {
+		return err
+	}
+
+	input := messages.NewMessage("hello, world")
+	inputs := []messages.Message{input}
+
+	res, err := api.Generate(ctx, inputs)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(res.Content())
 
 	return nil
 }

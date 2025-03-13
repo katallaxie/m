@@ -13,7 +13,7 @@ import (
 	"github.com/katallaxie/m/pkg/models"
 )
 
-var _ models.Model[string] = (*Ollama[string])(nil)
+var _ models.Model = (*Ollama)(nil)
 
 // Opts ...
 type Opts struct {
@@ -42,13 +42,13 @@ func Defaults() *Opts {
 }
 
 // Ollama ...
-type Ollama[V models.Value] struct {
+type Ollama struct {
 	client *api.Client
 	opts   *Opts
 }
 
 // New ...
-func New[V models.Value](opts ...Opt) (*Ollama[V], error) {
+func New[V models.Value](opts ...Opt) (*Ollama, error) {
 	options := Defaults()
 
 	client := &http.Client{Timeout: options.Timeout}
@@ -63,19 +63,36 @@ func New[V models.Value](opts ...Opt) (*Ollama[V], error) {
 		return nil, err
 	}
 
-	model := new(Ollama[V])
+	model := new(Ollama)
 	model.client = api.NewClient(baseURL, options.Client)
 	model.opts = options
 
 	return model, nil
 }
 
+// WithBaseURL ...
+func WithBaseURL(baseURL string) Opt {
+	return func(o *Opts) {
+		o.BaseURL = baseURL
+	}
+}
+
 // Generate ...
-func (o *Ollama[V]) Generate(ctx context.Context, input []messages.Message[V], opts ...models.Opt) (messages.Message[V], error) {
+func (o *Ollama) Generate(ctx context.Context, input []messages.Message, opts ...models.Opt) (messages.Message, error) {
 	var req *api.ChatRequest
-	var msg messages.Message[V]
+	var msg messages.Message
+
+	req = &api.ChatRequest{}
+	req.Model = "phi4-mini"
+	req.Messages = make([]api.Message, len(input))
+	for i, m := range input {
+		req.Messages[i].Content = m.Content()
+		req.Messages[i].Role = "user"
+	}
 
 	fn := func(res api.ChatResponse) error {
+		msg = messages.NewMessage(res.Message.Content)
+
 		return nil
 	}
 

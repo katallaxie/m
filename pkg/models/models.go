@@ -12,10 +12,10 @@ type Value interface {
 }
 
 // Messages is a channel of messages.
-type Messages[V Value] chan messages.Message[V]
+type Messages chan messages.Message
 
 // Model ...
-type Model[V any] interface {
+type Model interface {
 	// Generate ...
-	Generate(ctx context.Context, input []messages.Message[V], opts ...Opt) (messages.Message[V], error)
+	Generate(ctx context.Context, input []messages.Message, opts ...Opt) (messages.Message, error)
 }
