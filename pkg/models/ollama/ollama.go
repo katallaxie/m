@@ -10,11 +10,11 @@ import (
 
 	"github.com/ollama/ollama/api"
 
-	"github.com/katallaxie/m/pkg/messages"
+	"github.com/katallaxie/m/pkg/chats"
 	"github.com/katallaxie/m/pkg/models"
 )
 
-var _ models.Model = (*Ollama)(nil)
+var _ models.Chatter = (*Ollama)(nil)
 
 // Opts ...
 type Opts struct {
@@ -49,7 +49,7 @@ type Ollama struct {
 }
 
 // New ...
-func New[V models.Value](opts ...Opt) (*Ollama, error) {
+func New(opts ...Opt) (*Ollama, error) {
 	options := Defaults()
 
 	client := &http.Client{Timeout: options.Timeout}
@@ -79,36 +79,32 @@ func WithBaseURL(baseURL string) Opt {
 }
 
 // Generate ...
-func (o *Ollama) Generate(ctx context.Context, input []messages.Message, opts ...models.Opt) (messages.Message, error) {
-	var req *api.ChatRequest
-	var msg messages.Message
-
-	req = &api.ChatRequest{}
-	req.Model = "smollm"
+func (o *Ollama) Generate(ctx context.Context, chat chats.Chat, opts ...models.Opt) (chats.Chat, error) {
+	req := &api.ChatRequest{}
+	req.Model = chat.Model
 	req.Messages = make([]api.Message, 0)
 	req.Messages = append(req.Messages, api.Message{
 		Role:    "system",
-		Content: "You are an AI assistant.",
+		Content: "You are an fun and friendly AI assistant that adds emojies to the answers.",
 	})
 
-	for _, m := range input {
+	for _, m := range chat.Messages {
 		req.Messages = append(req.Messages, api.Message{
 			Role:    "user",
-			Content: m.Content(),
+			Content: m.Content,
 		})
 	}
 
 	fn := func(res api.ChatResponse) error {
 		fmt.Print(res.Message.Content)
-		msg = messages.NewMessage(res.Message.Content)
 
 		return nil
 	}
 
 	err := o.client.Chat(ctx, req, fn)
 	if err != nil {
-		return nil, err
+		return chat, err
 	}
 
-	return msg, nil
+	return chat, nil
 }

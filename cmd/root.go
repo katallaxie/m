@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/katallaxie/m/internal/config"
-	"github.com/katallaxie/m/pkg/messages"
+	"github.com/katallaxie/m/pkg/chats"
 	"github.com/katallaxie/m/pkg/models/ollama"
 
 	"github.com/spf13/cobra"
@@ -26,6 +26,7 @@ var (
 
 func init() {
 	RootCmd.PersistentFlags().BoolVarP(&cfg.Flags.Verbose, "verbose", "v", cfg.Flags.Verbose, "verbose output")
+	RootCmd.PersistentFlags().StringVarP(&cfg.Flags.Model, "model", "m", cfg.Flags.Model, "model to use (default: smollm)")
 
 	RootCmd.SilenceErrors = true
 	RootCmd.SilenceUsage = true
@@ -41,7 +42,7 @@ var RootCmd = &cobra.Command{
 }
 
 func runRoot(ctx context.Context, args ...string) error {
-	api, err := ollama.New[string](ollama.WithBaseURL("http://localhost:7869"))
+	api, err := ollama.New(ollama.WithBaseURL("http://localhost:7869"))
 	if err != nil {
 		return err
 	}
@@ -52,15 +53,19 @@ func runRoot(ctx context.Context, args ...string) error {
 		sb.WriteString(" ")
 	}
 
-	input := messages.NewMessage(sb.String())
-	inputs := []messages.Message{input}
+	msgs := []chats.Message{
+		{
+			Role:    "user",
+			Content: sb.String(),
+		},
+	}
 
-	res, err := api.Generate(ctx, inputs)
+	chat := chats.NewChat(cfg.Flags.Model, msgs, nil, nil, "", "")
+
+	_, err = api.Generate(ctx, chat)
 	if err != nil {
 		return err
 	}
-
-	fmt.Println(res.Content())
 
 	return nil
 }

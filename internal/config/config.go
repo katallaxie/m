@@ -10,6 +10,8 @@ import (
 type Flags struct {
 	// Verbose toggles the verbosity.
 	Verbose bool
+	// Model is the model.
+	Model string
 }
 
 // NewFlags returns a new flags.
@@ -32,7 +34,12 @@ func New() *Config {
 
 // Default returns the default configuration.
 func Default() Config {
-	return Config{}
+	return Config{
+		Flags: Flags{
+			Verbose: false,
+			Model:   "smollm",
+		},
+	}
 }
 
 // HomeDir returns the home directory.
