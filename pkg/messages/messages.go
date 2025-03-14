@@ -21,7 +21,12 @@ type MessageImpl struct {
 
 // Value ...
 func (m *MessageImpl) Content() string {
-	return m.content
+	return m.message
+}
+
+// Message ...
+func (m *MessageImpl) Message() string {
+	return m.message
 }
 
 // Timestamp ...

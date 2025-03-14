@@ -3,6 +3,7 @@ package ollama
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/url"
 	"time"
@@ -83,14 +84,22 @@ func (o *Ollama) Generate(ctx context.Context, input []messages.Message, opts ..
 	var msg messages.Message
 
 	req = &api.ChatRequest{}
-	req.Model = "phi4-mini"
-	req.Messages = make([]api.Message, len(input))
-	for i, m := range input {
-		req.Messages[i].Content = m.Content()
-		req.Messages[i].Role = "user"
+	req.Model = "smollm"
+	req.Messages = make([]api.Message, 0)
+	req.Messages = append(req.Messages, api.Message{
+		Role:    "system",
+		Content: "You are an AI assistant.",
+	})
+
+	for _, m := range input {
+		req.Messages = append(req.Messages, api.Message{
+			Role:    "user",
+			Content: m.Content(),
+		})
 	}
 
 	fn := func(res api.ChatResponse) error {
+		fmt.Print(res.Message.Content)
 		msg = messages.NewMessage(res.Message.Content)
 
 		return nil

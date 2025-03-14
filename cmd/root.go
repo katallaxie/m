@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/katallaxie/m/internal/config"
 	"github.com/katallaxie/m/pkg/messages"
@@ -45,7 +46,13 @@ func runRoot(ctx context.Context, args ...string) error {
 		return err
 	}
 
-	input := messages.NewMessage("hello, world")
+	var sb strings.Builder
+	for _, arg := range args {
+		sb.WriteString(arg)
+		sb.WriteString(" ")
+	}
+
+	input := messages.NewMessage(sb.String())
 	inputs := []messages.Message{input}
 
 	res, err := api.Generate(ctx, inputs)
