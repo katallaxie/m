@@ -6,9 +6,13 @@ import (
 	"strings"
 
 	"github.com/katallaxie/m/internal/config"
-	"github.com/katallaxie/m/pkg/chats"
-	"github.com/katallaxie/m/pkg/models/ollama"
 
+	"github.com/katallaxie/pkg/slices"
+	"github.com/katallaxie/prompts"
+	"github.com/katallaxie/prompts/ollama"
+	"github.com/katallaxie/streams"
+	"github.com/katallaxie/streams/sinks"
+	"github.com/katallaxie/streams/sources"
 	"github.com/spf13/cobra"
 )
 
@@ -23,6 +27,11 @@ var (
 	commit  = "none"
 	date    = "unknown"
 )
+
+func mapCompletionMessages(msg prompts.Completion) string {
+	f := slices.First(msg.Choices...)
+	return f.Message.GetContent()
+}
 
 func init() {
 	RootCmd.PersistentFlags().BoolVarP(&cfg.Flags.Verbose, "verbose", "v", cfg.Flags.Verbose, "verbose output")
@@ -53,19 +62,27 @@ func runRoot(ctx context.Context, args ...string) error {
 		sb.WriteString(" ")
 	}
 
-	msgs := []chats.Message{
-		{
-			Role:    "user",
-			Content: sb.String(),
+	prompt := prompts.Prompt{
+		Model: prompts.Model("smollm"),
+		Messages: []prompts.Message{
+			&prompts.SystemMessage{
+				Content: "You are a helpful, but funny AI assistant. You are here to help me with my daily tasks. You add emojies to your answers to make them more fun.",
+			},
+			&prompts.UserMessage{
+				Content: sb.String(),
+			},
 		},
 	}
 
-	chat := chats.NewChat(cfg.Flags.Model, msgs, nil, nil, "", "")
-
-	_, err = api.Generate(ctx, chat)
+	res, err := api.Complete(ctx, &prompt)
 	if err != nil {
-		return err
+		panic(err)
 	}
+
+	source := sources.NewChanSource(res)
+	sink := sinks.NewStdout()
+
+	source.Pipe(streams.NewPassThrough()).Pipe(streams.NewMap(mapCompletionMessages)).To(sink)
 
 	return nil
 }
