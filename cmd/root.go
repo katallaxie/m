@@ -34,6 +34,8 @@ func mapCompletionMessages(msg prompts.Completion) string {
 }
 
 func init() {
+	RootCmd.AddCommand(InitCmd)
+
 	RootCmd.PersistentFlags().StringVarP(&cfg.Flags.File, "file", "f", cfg.Flags.File, "configuration file")
 	RootCmd.PersistentFlags().BoolVarP(&cfg.Flags.Verbose, "verbose", "v", cfg.Flags.Verbose, "verbose output")
 	RootCmd.PersistentFlags().StringVarP(&cfg.Flags.Model, "model", "m", cfg.Flags.Model, "model to use (default: smollm)")

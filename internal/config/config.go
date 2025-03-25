@@ -13,8 +13,12 @@ import (
 type Flags struct {
 	// File is the configuration file.
 	File string
+	// Path ...
+	Path string
 	// Verbose toggles the verbosity.
 	Verbose bool
+	// Force is forcing creating the file
+	Force bool
 	// Model is the model.
 	Model string
 }

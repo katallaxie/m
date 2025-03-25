@@ -1,13 +1,17 @@
 package spec
 
 import (
+	"fmt"
+	"os"
+	"path/filepath"
 	"reflect"
 	"strings"
 	"sync"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/katallaxie/pkg/filex"
 	"github.com/pkg/errors"
-	"github.com/stretchr/testify/assert/yaml"
+	"gopkg.in/yaml.v3"
 )
 
 var validate = validator.New()
@@ -72,4 +76,30 @@ func (s *Spec) Validate() error {
 	}
 
 	return validate.Struct(s)
+}
+
+// Write is the write function for the spec.
+func Write(s *Spec, file string, force bool) error {
+	b, err := yaml.Marshal(s)
+	if err != nil {
+		return err
+	}
+
+	ok, _ := filex.FileExists(filepath.Clean(file))
+	if ok && !force {
+		return fmt.Errorf("%s already exists, use --force to overwrite", file)
+	}
+
+	f, err := os.Create(filepath.Clean(file))
+	if err != nil {
+		return err
+	}
+	defer func() { _ = f.Close() }()
+
+	_, err = f.Write(b)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
