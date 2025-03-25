@@ -34,6 +34,7 @@ func mapCompletionMessages(msg prompts.Completion) string {
 }
 
 func init() {
+	RootCmd.PersistentFlags().StringVarP(&cfg.Flags.File, "file", "f", cfg.Flags.File, "configuration file")
 	RootCmd.PersistentFlags().BoolVarP(&cfg.Flags.Verbose, "verbose", "v", cfg.Flags.Verbose, "verbose output")
 	RootCmd.PersistentFlags().StringVarP(&cfg.Flags.Model, "model", "m", cfg.Flags.Model, "model to use (default: smollm)")
 
@@ -51,6 +52,19 @@ var RootCmd = &cobra.Command{
 }
 
 func runRoot(ctx context.Context, args ...string) error {
+	err := cfg.LoadSpec()
+	if err != nil {
+		return err
+	}
+
+	cfg.Lock()
+	defer cfg.Unlock()
+
+	err = cfg.Spec.Validate()
+	if err != nil {
+		return err
+	}
+
 	api, err := ollama.New(ollama.WithBaseURL("http://localhost:7869"))
 	if err != nil {
 		return err
@@ -63,7 +77,7 @@ func runRoot(ctx context.Context, args ...string) error {
 	}
 
 	prompt := prompts.Prompt{
-		Model: prompts.Model("smollm"),
+		Model: prompts.Model(cfg.Spec.Model),
 		Messages: []prompts.Message{
 			&prompts.SystemMessage{
 				Content: "You are a helpful, but funny AI assistant. You are here to help me with my daily tasks. You add emojies to your answers to make them more fun. You give short answers.",
