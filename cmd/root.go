@@ -66,7 +66,7 @@ func runRoot(ctx context.Context, args ...string) error {
 		Model: prompts.Model("smollm"),
 		Messages: []prompts.Message{
 			&prompts.SystemMessage{
-				Content: "You are a helpful, but funny AI assistant. You are here to help me with my daily tasks. You add emojies to your answers to make them more fun.",
+				Content: "You are a helpful, but funny AI assistant. You are here to help me with my daily tasks. You add emojies to your answers to make them more fun. You give short answers.",
 			},
 			&prompts.UserMessage{
 				Content: sb.String(),
