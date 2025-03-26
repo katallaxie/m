@@ -15,7 +15,7 @@ tool (
 
 require (
 	github.com/go-playground/validator/v10 v10.25.0
-	github.com/katallaxie/pkg v0.7.1-0.20250324084620-ca2ff02d7763
+	github.com/katallaxie/pkg v0.7.2
 	github.com/katallaxie/prompts v0.0.0-20250324213434-1fe76aac8c5d
 	github.com/katallaxie/streams v0.3.2-0.20250324150938-78b0aa97a8c4
 	github.com/pkg/errors v0.9.1
@@ -28,7 +28,7 @@ require (
 	4d63.com/gocheckcompilerdirectives v1.3.0 // indirect
 	4d63.com/gochecknoglobals v0.2.2 // indirect
 	cel.dev/expr v0.19.1 // indirect
-	cloud.google.com/go v0.116.0 // indirect
+	cloud.google.com/go v0.117.0 // indirect
 	cloud.google.com/go/auth v0.15.0 // indirect
 	cloud.google.com/go/auth/oauth2adapt v0.2.7 // indirect
 	cloud.google.com/go/compute/metadata v0.6.0 // indirect
