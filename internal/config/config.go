@@ -30,6 +30,12 @@ func NewFlags() *Flags {
 
 // Config contains the configuration.
 type Config struct {
+	// Stdin ...
+	Stdin *os.File
+	// Stdout ...
+	Stdout *os.File
+	// Stderr ...
+	Stderr *os.File
 	// Spec is the configuration specification.
 	Spec *spec.Spec
 	// Flags ...
@@ -44,9 +50,12 @@ func New() *Config {
 }
 
 // Default returns the default configuration.
-func Default() Config {
-	return Config{
-		Spec: spec.Default(),
+func Default() *Config {
+	return &Config{
+		Stdin:  os.Stdin,
+		Stdout: os.Stdout,
+		Stderr: os.Stderr,
+		Spec:   spec.Default(),
 		Flags: &Flags{
 			File:    "~/.m.yml",
 			Verbose: false,
