@@ -1,10 +1,11 @@
-package chat
+package app
 
 import (
 	"fmt"
 	"strings"
 
 	"github.com/katallaxie/m/internal/ui/style"
+
 	"github.com/rivo/tview"
 )
 

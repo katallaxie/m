@@ -4,9 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/katallaxie/m/internal/app"
 	"github.com/katallaxie/m/internal/config"
-	"github.com/katallaxie/m/internal/entity"
-	"github.com/katallaxie/m/internal/ui"
 
 	"github.com/katallaxie/pkg/slices"
 	"github.com/katallaxie/prompts"
@@ -64,9 +63,7 @@ func runRoot(ctx context.Context, args ...string) error {
 		return err
 	}
 
-	session := entity.Session{}
-
-	err = ui.NewUI(session).Run()
+	err = app.New("M", version, cfg).Run()
 	if err != nil {
 		return err
 	}

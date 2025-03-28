@@ -1,10 +1,6 @@
 package chat
 
 import (
-	"fmt"
-
-	"github.com/katallaxie/m/internal/ui/utils"
-
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
@@ -12,95 +8,33 @@ import (
 // Chat is a chat primitive dialog.
 type Chat struct {
 	*tview.Box
-	title  string
-	layout *tview.Flex
+	title         string
+	layout        *tview.Flex
+	prompt        *Prompt
+	notebooksList *NotebookList
 }
 
 // NewChat returns a chat screen primitive.
 func NewChat(appName string, appVersion string) *Chat {
 	chat := &Chat{
-		Box:   tview.NewBox(),
-		title: "Chat",
+		Box:           tview.NewBox(),
+		notebooksList: NewNotebookList(),
+		prompt:        NewPrompt(),
+		title:         "Chat",
 	}
-
-	// colors
-	headerColor := tcell.ColorWhite
-	fgColor := tcell.ColorWhite
-	bgColor := tcell.ColorDefault
-	borderColor := tcell.ColorWhite
-
-	// application keys description table
-	keyinfo := tview.NewTable()
-	// keyinfo.SetBackgroundColor(bgColor)
-	keyinfo.SetFixed(1, 1)
-	keyinfo.SetSelectable(false, false)
-
-	// application description and version text view
-	appinfo := tview.NewTextView().
-		SetDynamicColors(true).
-		SetWrap(true).
-		SetTextAlign(tview.AlignLeft)
-	appinfo.SetBackgroundColor(bgColor)
-
-	appInfoText := fmt.Sprintf("%s\n\n%s %s\n\n%s")
-
-	appinfo.SetText(appInfoText)
-	appinfo.SetTextColor(headerColor)
-
-	// help table items
-	// the items will be divided into two separate tables
-	rowIndex := 0
-	colIndex := 0
-	needInit := true
-	maxRowIndex := len(utils.UIKeysBindings)/2 + 1 //nolint:mnd
-
-	for i := range utils.UIKeysBindings {
-		if i >= maxRowIndex {
-			if needInit {
-				colIndex = 2
-				rowIndex = 0
-				needInit = false
-			}
-		}
-
-		keyinfo.SetCell(rowIndex, colIndex,
-			tview.NewTableCell(fmt.Sprintf("%s:", utils.UIKeysBindings[i].KeyLabel)). //nolint:perfsprint
-													SetAlign(tview.AlignRight).
-													SetBackgroundColor(bgColor).
-													SetSelectable(true).SetTextColor(headerColor))
-
-		keyinfo.SetCell(rowIndex, colIndex+1,
-			tview.NewTableCell(utils.UIKeysBindings[i].KeyDesc).
-				SetAlign(tview.AlignLeft).
-				SetBackgroundColor(bgColor).
-				SetSelectable(true).SetTextColor(fgColor))
-
-		rowIndex++
-	}
-
-	// appinfo and appkeys layout
-	mlayout := tview.NewFlex().SetDirection(tview.FlexRow)
-	mlayout.AddItem(appinfo, 2, 0, false) //nolint:mnd
-	mlayout.AddItem(utils.EmptyBoxSpace(bgColor), 1, 0, false)
-	mlayout.AddItem(keyinfo, 0, 1, false)
-	mlayout.AddItem(utils.EmptyBoxSpace(bgColor), 1, 0, false)
-
-	menuItems := [][]string{}
 
 	splitSidebar := tview.NewFlex().SetDirection(tview.FlexRow).
-		AddItem(newMenu(menuItems), 15, 1, true)
+		AddItem(chat.notebooksList, 15, 1, false)
+
+	splitMainPanel := tview.NewFlex().SetDirection(tview.FlexRow).
+		AddItem(chat.prompt, 15, 1, true)
+
+	playout := tview.NewFlex().SetDirection(tview.FlexColumn).
+		AddItem(splitSidebar, 35, 1, false).
+		AddItem(splitMainPanel, 0, 4, true)
 
 	// layout
-	chat.layout = tview.NewFlex().SetDirection(tview.FlexColumn)
-	chat.layout.AddItem(splitSidebar, 35, 1, true)
-	// chat.layout.AddItem(mlayout, 0, 4, false)
-	chat.layout.SetBorder(true)
-	// help.layout.AddItem(utils.EmptyBoxSpace(bgColor), 1, 0, false)
-	// help.layout.AddItem(mlayout, 0, 1, false)
-	// help.layout.AddItem(utils.EmptyBoxSpace(bgColor), 1, 0, false)
-	// help.layout.SetBorder(true)
-	// help.layout.SetBackgroundColor(bgColor)
-	chat.layout.SetBorderColor(borderColor)
+	chat.layout = playout
 
 	return chat
 }
