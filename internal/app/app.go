@@ -68,16 +68,22 @@ func New(appName, version string, cfg *config.Config) *App {
 
 	app.SetRoot(window, true)
 
+	return app
+}
+
+// Run runs the application.
+func (a *App) Run() error {
+
 	// listen for user input
-	app.Application.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+	a.Application.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Key() == utils.AppExitKey.Key {
-			app.Stop()
+			a.Stop()
 			os.Exit(0)
 		}
 
 		event = utils.ParseKeyEventKey(event)
 
-		if !app.fontScreenHasActiveDialog() {
+		if !a.fontScreenHasActiveDialog() {
 			// previous and next screen keys
 			switch event.Rune() {
 			case utils.NextScreenKey.Rune():
@@ -88,11 +94,11 @@ func New(appName, version string, cfg *config.Config) *App {
 			// normal page key switch
 			switch event.Key() { //nolint:exhaustive
 			case utils.HelpScreenKey.EventKey():
-				app.switchToScreen(app.help.GetTitle())
+				a.switchToScreen(a.help.GetTitle())
 
 				return nil
 			case utils.ChatScreenKey.EventKey():
-				app.switchToScreen(app.chat.GetTitle())
+				a.switchToScreen(a.chat.GetTitle())
 
 				return nil
 			}
@@ -101,14 +107,11 @@ func New(appName, version string, cfg *config.Config) *App {
 		return event
 	})
 
-	app.Init()
+	a.currentPage = a.chat.GetTitle()
+	a.pages.SwitchToPage(a.currentPage)
 
-	return app
-}
+	a.Init()
 
-// Run runs the application.
-func (a *App) Run() error {
-	a.EnableMouse(true)
 	return a.Application.Run()
 }
 
