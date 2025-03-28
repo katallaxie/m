@@ -1,4 +1,4 @@
-package help
+package chat
 
 import (
 	"fmt"
@@ -85,8 +85,16 @@ func NewChat(appName string, appVersion string) *Chat {
 	mlayout.AddItem(keyinfo, 0, 1, false)
 	mlayout.AddItem(utils.EmptyBoxSpace(bgColor), 1, 0, false)
 
+	menuItems := [][]string{}
+
+	splitSidebar := tview.NewFlex().SetDirection(tview.FlexRow).
+		AddItem(newMenu(menuItems), 15, 1, true)
+
 	// layout
-	// help.layout = tview.NewFlex().SetDirection(tview.FlexColumn)
+	chat.layout = tview.NewFlex().SetDirection(tview.FlexColumn)
+	chat.layout.AddItem(splitSidebar, 35, 1, true)
+	// chat.layout.AddItem(mlayout, 0, 4, false)
+	chat.layout.SetBorder(true)
 	// help.layout.AddItem(utils.EmptyBoxSpace(bgColor), 1, 0, false)
 	// help.layout.AddItem(mlayout, 0, 1, false)
 	// help.layout.AddItem(utils.EmptyBoxSpace(bgColor), 1, 0, false)

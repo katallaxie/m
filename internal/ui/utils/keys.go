@@ -88,14 +88,14 @@ var (
 		KeyDesc:  "exit application",
 	}
 	HelpScreenKey = uiKeyInfo{
-		Key:      tcell.Key(256),
-		KeyLabel: "?",
+		Key:      tcell.KeyF1,
+		KeyLabel: "F1",
 		KeyDesc:  "display help screen",
 	}
-	SystemScreenKey = uiKeyInfo{
+	ChatScreenKey = uiKeyInfo{
 		Key:      tcell.KeyF2,
 		KeyLabel: "F2",
-		KeyDesc:  "display system screen",
+		KeyDesc:  "display chat screen",
 	}
 	PodsScreenKey = uiKeyInfo{
 		Key:      tcell.KeyF3,
@@ -147,7 +147,7 @@ var UIKeysBindings = []uiKeyInfo{
 	ScrollDownKey,
 	AppExitKey,
 	HelpScreenKey,
-	SystemScreenKey,
+	ChatScreenKey,
 	PodsScreenKey,
 	ContainersScreenKey,
 	VolumesScreenKey,

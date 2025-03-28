@@ -7,6 +7,7 @@ import (
 
 	"github.com/gdamore/tcell/v2"
 	"github.com/katallaxie/m/internal/entity"
+	"github.com/katallaxie/m/internal/ui/chat"
 	"github.com/katallaxie/m/internal/ui/help"
 	"github.com/katallaxie/m/internal/ui/infobar"
 	"github.com/katallaxie/m/internal/ui/utils"
@@ -30,6 +31,7 @@ type UI struct {
 	currentPage string
 	pages       *tview.Pages
 	menu        *tview.TextView
+	chat        *chat.Chat
 	help        *help.Help
 	infoBar     *infobar.InfoBar
 
@@ -61,13 +63,7 @@ func NewUI(session entity.Session) UI {
 		Theme:   &entity.TerminalTheme,
 		pages:   tview.NewPages(),
 		infoBar: infobar.NewInfoBar("M", "0.1.0"),
-	}
-
-	ui.Layout = &ComponentLayout{
-		MenuList:     ui.InitSidebarMenu(),
-		BookmarkList: ui.InitBookmarkMenu(),
-		LogList:      ui.InitLogList(),
-		OutputPanel:  ui.InitOutputPanel(),
+		chat:    chat.NewChat("M", "0.1.0"),
 	}
 
 	ui.help = help.NewHelp("M", "0.1.0")
@@ -75,6 +71,7 @@ func NewUI(session entity.Session) UI {
 	// menu items
 	menuItems := [][]string{
 		{utils.HelpScreenKey.Label(), ui.help.GetTitle()},
+		{utils.ChatScreenKey.Label(), ui.chat.GetTitle()},
 		// {utils.SystemScreenKey.Label(), app.system.GetTitle()},
 		// {utils.PodsScreenKey.Label(), app.pods.GetTitle()},
 		// {utils.ContainersScreenKey.Label(), app.containers.GetTitle()},
@@ -86,6 +83,7 @@ func NewUI(session entity.Session) UI {
 	ui.menu = newMenu(menuItems)
 
 	ui.pages.AddPage(ui.help.GetTitle(), ui.help, true, false)
+	ui.pages.AddPage(ui.chat.GetTitle(), ui.chat, true, false)
 
 	window := wm.NewWindow().
 		Show().
@@ -115,6 +113,10 @@ func NewUI(session entity.Session) UI {
 		switch event.Key() { //nolint:exhaustive
 		case utils.HelpScreenKey.EventKey():
 			ui.switchToScreen(ui.help.GetTitle())
+
+			return nil
+		case utils.ChatScreenKey.EventKey():
+			ui.switchToScreen(ui.chat.GetTitle())
 
 			return nil
 		}
@@ -156,29 +158,6 @@ func (u *UI) setupAppLayout() *tview.Flex {
 		AddItem(u.menu, 1, 1, false)
 
 	return layout
-}
-
-// InitSidebarMenu is used to initialize and populate sidebar menu
-func (u *UI) InitSidebarMenu() *tview.List {
-
-	menuList := tview.NewList().ShowSecondaryText(false)
-	menuList.SetBorder(true).SetTitle(" 🐶 Menu ")
-	menuList.SetBorderPadding(1, 1, 1, 1)
-
-	// menuList.AddItem("Server URL", "", 'u', u.ShowSetServerURLModal)
-	// menuList.AddItem("Methods", "", 'm', u.ShowSetRequestMethodModal)
-	// menuList.AddItem("Authorization", "", 'a', u.ShowAuthorizationModal)
-	// menuList.AddItem("Metadata", "", 'd', u.ShowMetadataModal)
-	// menuList.AddItem("Request Payload", "", 'p', u.ShowRequestPayloadModal)
-	// menuList.AddItem("Invoke", "", 'i', u.InvokeRPC)
-	// menuList.AddItem("[::d]"+strings.Repeat(string(tcell.RuneHLine), 25), "", 0, nil)
-	// menuList.AddItem("Create New Bookmark", "", 'b', u.ShowSaveToBookmarkModal)
-	// menuList.AddItem("Quit", "", 'q', u.QuitApplication)
-
-	// // Handle keypress on menu list
-	// u.InitSidebarMenu_SetInputCapture(menuList)
-
-	return menuList
 }
 
 type InitOutputPanelComponents struct {
