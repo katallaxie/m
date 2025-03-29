@@ -7,8 +7,6 @@ import (
 	"github.com/katallaxie/m/internal/app"
 	"github.com/katallaxie/m/internal/config"
 
-	"github.com/katallaxie/pkg/slices"
-	"github.com/katallaxie/prompts"
 	"github.com/spf13/cobra"
 )
 
@@ -24,13 +22,9 @@ var (
 	date    = "unknown"
 )
 
-func mapCompletionMessages(msg prompts.Completion) string {
-	f := slices.First(msg.Choices...)
-	return f.Message.GetContent()
-}
-
 func init() {
 	RootCmd.AddCommand(InitCmd)
+	RootCmd.AddCommand(VersionCmd)
 
 	RootCmd.PersistentFlags().StringVarP(&cfg.Flags.File, "config", "c", cfg.Flags.File, "configuration file")
 	RootCmd.PersistentFlags().BoolVarP(&cfg.Flags.Verbose, "verbose", "v", cfg.Flags.Verbose, "verbose output")
