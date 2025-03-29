@@ -1,8 +1,6 @@
 package app
 
 import (
-	"os"
-
 	"github.com/katallaxie/m/internal/config"
 	"github.com/katallaxie/m/internal/entity"
 	"github.com/katallaxie/m/internal/ui/chat"
@@ -11,7 +9,6 @@ import (
 	"github.com/katallaxie/m/internal/ui/utils"
 
 	"github.com/epiclabs-io/winman"
-	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 )
 
@@ -52,13 +49,22 @@ func New(appName, version string, cfg *config.Config) *App {
 	}
 	app.menu = newMenu(menuItems)
 
-	app.pages.AddPage(app.help.GetTitle(), app.help, true, false)
-	app.pages.AddPage(app.chat.GetTitle(), app.chat, true, false)
+	sidebarPanel := tview.NewFlex().SetDirection(tview.FlexRow).
+		AddItem(chat.NewNotebookList(), 15, 1, true).
+		AddItem(chat.NewNotebookList(), 0, 1, false)
+
+	mainPanel := tview.NewFlex().SetDirection(tview.FlexRow).
+		AddItem(app.chat, 0, 3, false).
+		AddItem(chat.NewPrompt(), 0, 1, true)
+
+	mainLayout := tview.NewFlex().SetDirection(tview.FlexColumn).
+		AddItem(sidebarPanel, 35, 1, false).
+		AddItem(mainPanel, 0, 4, true)
 
 	layout := tview.NewFlex().
 		SetDirection(tview.FlexRow).
 		AddItem(app.infoBar, 3, 1, false).
-		AddItem(app.pages, 0, 1, true).
+		AddItem(mainLayout, 0, 1, true).
 		AddItem(app.menu, 1, 1, false)
 
 	window := wm.NewWindow().
@@ -67,48 +73,45 @@ func New(appName, version string, cfg *config.Config) *App {
 		SetBorder(false)
 
 	app.SetRoot(window, true)
+	app.EnableMouse(true)
+	app.EnablePaste(false)
 
 	return app
 }
 
 // Run runs the application.
 func (a *App) Run() error {
+	// a.Application.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+	// 	if event.Key() == utils.AppExitKey.Key {
+	// 		a.Stop()
+	// 		os.Exit(0)
+	// 	}
 
-	// listen for user input
-	a.Application.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		if event.Key() == utils.AppExitKey.Key {
-			a.Stop()
-			os.Exit(0)
-		}
+	// 	event = utils.ParseKeyEventKey(event)
 
-		event = utils.ParseKeyEventKey(event)
+	// 	if !a.fontScreenHasActiveDialog() {
+	// 		// previous and next screen keys
+	// 		switch event.Rune() {
+	// 		case utils.NextScreenKey.Rune():
+	// 			return nil
+	// 		default:
+	// 		}
 
-		if !a.fontScreenHasActiveDialog() {
-			// previous and next screen keys
-			switch event.Rune() {
-			case utils.NextScreenKey.Rune():
-				return nil
-			default:
-			}
+	// 		// normal page key switch
+	// 		switch event.Key() { //nolint:exhaustive
+	// 		case utils.HelpScreenKey.EventKey():
+	// 			a.switchToScreen(a.help.GetTitle())
 
-			// normal page key switch
-			switch event.Key() { //nolint:exhaustive
-			case utils.HelpScreenKey.EventKey():
-				a.switchToScreen(a.help.GetTitle())
+	// 			return nil
+	// 		case utils.ChatScreenKey.EventKey():
+	// 			a.switchToScreen(a.chat.GetTitle())
 
-				return nil
-			case utils.ChatScreenKey.EventKey():
-				a.switchToScreen(a.chat.GetTitle())
+	// 			return nil
+	// 		}
+	// 	}
 
-				return nil
-			}
-		}
-
-		return event
-	})
-
-	a.currentPage = a.chat.GetTitle()
-	a.pages.SwitchToPage(a.currentPage)
+	// 	return event
+	// })
 
 	a.Init()
 
@@ -117,39 +120,4 @@ func (a *App) Run() error {
 
 // Init initializes the application.
 func (a *App) Init() {
-	a.SetFocus(a.chat)
-}
-
-func (a *App) switchToScreen(name string) {
-	a.pages.SwitchToPage(name)
-	a.setPageFocus(name)
-	a.updatePageData(name)
-
-	a.currentPage = name
-}
-
-func (a *App) setPageFocus(page string) {
-	switch page {
-	case a.help.GetTitle():
-		a.Application.SetFocus(a.help)
-	case a.chat.GetTitle():
-		a.Application.SetFocus(a.chat)
-	}
-}
-
-func (a *App) updatePageData(page string) {
-	switch page {
-
-	}
-}
-
-func (a *App) fontScreenHasActiveDialog() bool {
-	switch a.currentPage {
-	case a.help.GetTitle():
-		return false
-	case a.chat.GetTitle():
-		return a.chat.HasFocus()
-	}
-
-	return false
 }

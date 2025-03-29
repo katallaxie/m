@@ -21,7 +21,7 @@ func NewNotebookList() *NotebookList {
 	treeRoot := tview.NewTreeNode("📚 Library")
 	notebookList.SetRoot(treeRoot)
 	notebookList.SetCurrentNode(treeRoot)
-	notebookList.SetTitle(" 📚 Notebooks Library ")
+	notebookList.SetTitle(" 📚 Notebooks ")
 	notebookList.SetBorder(true)
 
 	notebookList.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
