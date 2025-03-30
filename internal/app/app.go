@@ -38,7 +38,7 @@ func New(appName, version string, cfg *config.Config) *App {
 		theme:       &entity.TerminalTheme,
 		pages:       tview.NewPages(),
 		infoBar:     infobar.NewInfoBar("M", "0.1.0"),
-		chat:        chat.NewChat("M", "0.1.0"),
+		chat:        chat.NewChat(a, "M", "0.1.0"),
 		help:        help.NewHelp("M", "0.1.0"),
 	}
 
