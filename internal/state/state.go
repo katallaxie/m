@@ -35,14 +35,23 @@ func AddMessageReducer(prev fsmx.State, action fsmx.Actionable) fsmx.State {
 	return state
 }
 
+const (
+	Initial = iota
+	Loading
+	Error
+	Success
+)
+
 // State ...
 type State struct {
+	Status   int
 	Messages []string
 }
 
 // NewState returns a new state.
 func NewState() *State {
 	return &State{
+		Status:   Initial,
 		Messages: make([]string, 0),
 	}
 }
