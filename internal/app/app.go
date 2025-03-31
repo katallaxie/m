@@ -63,7 +63,7 @@ func New(appName, version string, cfg *config.Config) *App {
 
 	mainPanel := tview.NewFlex().SetDirection(tview.FlexRow).
 		AddItem(app.chat, 0, 3, false).
-		AddItem(chat.NewPrompt(), 0, 1, true)
+		AddItem(chat.NewPrompt(app), 0, 1, true)
 
 	mainLayout := tview.NewFlex().SetDirection(tview.FlexColumn).
 		AddItem(sidebarPanel, 35, 1, false).

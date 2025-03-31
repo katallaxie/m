@@ -1,9 +1,7 @@
 package chat
 
 import (
-	"fmt"
 	"strings"
-	"time"
 
 	"github.com/katallaxie/m/internal/state"
 	"github.com/katallaxie/m/internal/ui"
@@ -25,21 +23,6 @@ func NewChat(app ui.Application, appName string, appVersion string) *Chat {
 
 	chat.SetTitle(chat.title)
 	chat.SetBorder(true)
-
-	go func() {
-		var (
-			newBuffer string
-		)
-
-		ticker := time.NewTicker(1 * time.Second)
-
-		for _ = range ticker.C {
-			timeHeader := time.Now().Format("15:04:05 02/01/2006")
-
-			newBuffer += fmt.Sprintln(timeHeader)
-			app.GetState().Dispatch(state.NewAddMessage(newBuffer))
-		}
-	}()
 
 	go func() {
 		for s := range app.GetState().Subscribe() {
