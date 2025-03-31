@@ -20,8 +20,7 @@ require (
 	github.com/gdamore/tcell/v2 v2.8.1
 	github.com/go-playground/validator/v10 v10.20.0
 	github.com/google/uuid v1.6.0
-	github.com/katallaxie/pkg v0.7.1-0.20250324084620-ca2ff02d7763
-	github.com/katallaxie/prompts v0.0.0-20250324213434-1fe76aac8c5d
+	github.com/katallaxie/pkg v0.7.2
 	github.com/pkg/errors v0.9.1
 	github.com/rivo/tview v0.0.0-20250325173046-7b72abf45814
 	github.com/spf13/cobra v1.9.1
