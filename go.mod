@@ -1,9 +1,6 @@
 module github.com/katallaxie/m
 
 go 1.24.0
-
-toolchain go1.24.1
-
 tool (
 	github.com/air-verse/air
 	github.com/golangci/golangci-lint/cmd/golangci-lint
@@ -18,7 +15,7 @@ require (
 	github.com/derailed/tview v0.8.5
 	github.com/epiclabs-io/winman v0.0.0-20220901164457-3d8c4b3ae090
 	github.com/gdamore/tcell/v2 v2.8.1
-	github.com/go-playground/validator/v10 v10.20.0
+	github.com/go-playground/validator/v10 v10.26.0
 	github.com/google/uuid v1.6.0
 	github.com/katallaxie/pkg v0.7.2
 	github.com/pkg/errors v0.9.1
