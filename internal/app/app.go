@@ -3,12 +3,14 @@ package app
 import (
 	"github.com/katallaxie/m/internal/config"
 	"github.com/katallaxie/m/internal/entity"
+	"github.com/katallaxie/m/internal/state"
 	"github.com/katallaxie/m/internal/ui/chat"
 	"github.com/katallaxie/m/internal/ui/help"
 	"github.com/katallaxie/m/internal/ui/infobar"
 	"github.com/katallaxie/m/internal/ui/utils"
 
 	"github.com/epiclabs-io/winman"
+	"github.com/katallaxie/pkg/fsmx"
 	"github.com/rivo/tview"
 )
 
@@ -25,6 +27,7 @@ type App struct {
 	help        *help.Help
 	infoBar     *infobar.InfoBar
 	config      *config.Config
+	state       fsmx.Storable
 }
 
 // New returns a new application.
@@ -38,9 +41,14 @@ func New(appName, version string, cfg *config.Config) *App {
 		theme:       &entity.TerminalTheme,
 		pages:       tview.NewPages(),
 		infoBar:     infobar.NewInfoBar("M", "0.1.0"),
-		chat:        chat.NewChat(a, "M", "0.1.0"),
 		help:        help.NewHelp("M", "0.1.0"),
 	}
+
+	// State machine
+	app.state = fsmx.New(state.NewState(), state.AddMessageReducer)
+
+	// Chat panel
+	app.chat = chat.NewChat(app, "M", "0.1.0")
 
 	// menu items
 	menuItems := [][]string{
@@ -77,6 +85,11 @@ func New(appName, version string, cfg *config.Config) *App {
 	app.EnablePaste(false)
 
 	return app
+}
+
+// StateUpdates returns the state updates.
+func (a *App) GetState() fsmx.Storable {
+	return a.state
 }
 
 // Run runs the application.
@@ -120,4 +133,11 @@ func (a *App) Run() error {
 
 // Init initializes the application.
 func (a *App) Init() {
+}
+
+// QueueUpdateDraw queues up a ui action and redraw the ui.
+func (a *App) QueueUpdateDraw(f func()) {
+	go func() {
+		a.Application.QueueUpdateDraw(f)
+	}()
 }
