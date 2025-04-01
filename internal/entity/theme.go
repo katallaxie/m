@@ -26,30 +26,28 @@ type Theme struct {
 	Style  ComponentStyle
 }
 
-var (
-	TerminalTheme = Theme{
-		Name: "Terminal",
-		Colors: ColorValue{
-			Error:           tcell.GetColor("red"),
-			Warning:         tcell.GetColor("darkred"),
-			Notice:          tcell.GetColor("silver"),
-			WindowColor:     tcell.GetColor("#444444"),
-			ModalColor:      tcell.GetColor("#111111"),
-			CommandBarColor: tcell.GetColor("#333333"),
-		},
-		Style: ComponentStyle{
-			ButtonStyle: tcell.StyleDefault.
-				Background(tcell.GetColor("#5500FF")),
-			PlaceholderStyle: tcell.StyleDefault.
-				Background(tcell.GetColor("#666666")).Italic(true),
-			FieldStyle: tcell.StyleDefault.
-				Background(tcell.GetColor("#666666")),
-			ListMainTextStyle: tcell.StyleDefault.
-				Background(tcell.GetColor("#444444")),
-			ListBorderStyle: tcell.StyleDefault.
-				Background(tcell.GetColor("#444444")),
-			TextAreaStyle: tcell.StyleDefault.
-				Background(tcell.GetColor("#444444")),
-		},
-	}
-)
+var TerminalTheme = Theme{
+	Name: "Terminal",
+	Colors: ColorValue{
+		Error:           tcell.GetColor("red"),
+		Warning:         tcell.GetColor("darkred"),
+		Notice:          tcell.GetColor("silver"),
+		WindowColor:     tcell.GetColor("#444444"),
+		ModalColor:      tcell.GetColor("#111111"),
+		CommandBarColor: tcell.GetColor("#333333"),
+	},
+	Style: ComponentStyle{
+		ButtonStyle: tcell.StyleDefault.
+			Background(tcell.GetColor("#5500FF")),
+		PlaceholderStyle: tcell.StyleDefault.
+			Background(tcell.GetColor("#666666")).Italic(true),
+		FieldStyle: tcell.StyleDefault.
+			Background(tcell.GetColor("#666666")),
+		ListMainTextStyle: tcell.StyleDefault.
+			Background(tcell.GetColor("#444444")),
+		ListBorderStyle: tcell.StyleDefault.
+			Background(tcell.GetColor("#444444")),
+		TextAreaStyle: tcell.StyleDefault.
+			Background(tcell.GetColor("#444444")),
+	},
+}

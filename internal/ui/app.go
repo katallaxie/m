@@ -7,5 +7,5 @@ import (
 // Application ...
 type Application interface {
 	QueueUpdateDraw(f func())
-	GetState() fsmx.Storable
+	GetState() fsmx.Store
 }

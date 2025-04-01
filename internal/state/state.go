@@ -6,7 +6,7 @@ import (
 
 // Actions ...
 const (
-	AddMessage fsmx.Action = iota
+	AddMessage fsmx.ActionType = iota
 )
 
 // AddMessagePayload ...
@@ -18,18 +18,18 @@ type AddMessagePayload struct {
 }
 
 // NewAddMessage returns a new action.
-func NewAddMessage(message string) fsmx.Actionable {
+func NewAddMessage(message string) fsmx.Action {
 	return fsmx.NewAction(AddMessage, AddMessagePayload{Message: message})
 }
 
 // AddMessageReducer ...
-func AddMessageReducer(prev fsmx.State, action fsmx.Actionable) fsmx.State {
-	if action.GetType() != AddMessage {
+func AddMessageReducer(prev fsmx.State, action fsmx.Action) fsmx.State {
+	if action.Type() != AddMessage {
 		return prev
 	}
 
 	state := prev.(*State)
-	payload := action.GetPayload().(AddMessagePayload)
+	payload := action.Payload().(AddMessagePayload)
 	state.Messages = append(state.Messages, payload.Message)
 
 	return state

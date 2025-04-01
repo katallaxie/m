@@ -27,7 +27,7 @@ type App struct {
 	help        *help.Help
 	infoBar     *infobar.InfoBar
 	config      *config.Config
-	state       fsmx.Storable
+	state       fsmx.Store
 }
 
 // New returns a new application.
@@ -88,7 +88,7 @@ func New(appName, version string, cfg *config.Config) *App {
 }
 
 // StateUpdates returns the state updates.
-func (a *App) GetState() fsmx.Storable {
+func (a *App) GetState() fsmx.Store {
 	return a.state
 }
 

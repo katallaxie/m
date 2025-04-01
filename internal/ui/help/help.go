@@ -43,7 +43,7 @@ func NewHelp(appName string, appVersion string) *Help {
 		SetTextAlign(tview.AlignLeft)
 	appinfo.SetBackgroundColor(bgColor)
 
-	appInfoText := fmt.Sprintf("%s\n\n%s %s\n\n%s")
+	appInfoText := fmt.Sprintf("%s %s - (C) 2024 m dev team.", appName, appVersion)
 
 	appinfo.SetText(appInfoText)
 	appinfo.SetTextColor(headerColor)

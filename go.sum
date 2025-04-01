@@ -816,6 +816,8 @@ github.com/karamaru-alpha/copyloopvar v1.2.1 h1:wmZaZYIjnJ0b5UoKDjUHrikcV0zuPyyx
 github.com/karamaru-alpha/copyloopvar v1.2.1/go.mod h1:nFmMlFNlClC2BPvNaHMdkirmTJxVCY0lhxBtlfOypMM=
 github.com/katallaxie/pkg v0.7.2-0.20250331112127-a665e87a3051 h1:XLilX7PFFxgB3TetbhvKALozX4WtErfD4L9l8T+3pkw=
 github.com/katallaxie/pkg v0.7.2-0.20250331112127-a665e87a3051/go.mod h1:7WaCAu/FhPPKDVldVH2sDlfglKYupInPvAq9x8az3Lk=
+github.com/katallaxie/pkg v0.7.2-0.20250331202550-39a6a0e2b62d h1:1xU6Sq5WLLIZftdtNDUo5QJB93hFJF+/gQx09sVy3zE=
+github.com/katallaxie/pkg v0.7.2-0.20250331202550-39a6a0e2b62d/go.mod h1:7WaCAu/FhPPKDVldVH2sDlfglKYupInPvAq9x8az3Lk=
 github.com/katallaxie/prompts v0.0.0-20250331121107-837e11d6207c h1:HUORSKuQ33EfMvETeEFVK1GerZX9r3NRfMux49+xwa0=
 github.com/katallaxie/prompts v0.0.0-20250331121107-837e11d6207c/go.mod h1:4+cbmQYtZ/Th+iCChopjkRnpxId4yzm27zZkUahpif4=
 github.com/katallaxie/streams v0.3.2-0.20250331120734-f5f017649505 h1:Q2Bmch0RQCUbPAMxO939u76/IXqSp/VGNtckY/fob1A=

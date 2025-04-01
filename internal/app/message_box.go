@@ -63,5 +63,4 @@ func (a *App) ShowMessageBox_SetInputCapture(wnd *winman.WindowBase, parent *tvi
 		}
 		return event
 	})
-
 }
