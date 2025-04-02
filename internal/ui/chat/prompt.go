@@ -4,14 +4,9 @@ import (
 	"context"
 
 	"github.com/gdamore/tcell/v2"
+	"github.com/katallaxie/m/internal/api"
 	"github.com/katallaxie/m/internal/state"
 	"github.com/katallaxie/m/internal/ui"
-	"github.com/katallaxie/pkg/slices"
-	"github.com/katallaxie/prompts"
-	"github.com/katallaxie/prompts/ollama"
-	"github.com/katallaxie/streams"
-	"github.com/katallaxie/streams/sinks"
-	"github.com/katallaxie/streams/sources"
 	"github.com/rivo/tview"
 )
 
@@ -33,22 +28,19 @@ type PromptState struct {
 type Prompt struct {
 	*tview.TextArea
 	state *PromptState
-	app   ui.Application
-}
-
-func mapCompletionMessages(msg prompts.Completion) string {
-	f := slices.First(msg.Choices...)
-	return f.Message.GetContent()
+	api   *api.Api
+	app   ui.Application[state.State]
 }
 
 // NewPrompt returns a new chat prompt.
-func NewPrompt(app ui.Application) *Prompt {
+func NewPrompt(app ui.Application[state.State], api *api.Api) *Prompt {
 	prompt := &Prompt{
 		TextArea: tview.NewTextArea(),
 		state: &PromptState{
 			isFocused: false,
 		},
 		app: app,
+		api: api,
 	}
 
 	prompt.SetTitle(" ✍️ Prompt ")
@@ -61,7 +53,7 @@ func NewPrompt(app ui.Application) *Prompt {
 
 	prompt.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Key() == tcell.KeyEnter {
-			prompt.onEnter()
+			prompt.onEnter(example)
 		}
 
 		return event
@@ -70,38 +62,8 @@ func NewPrompt(app ui.Application) *Prompt {
 	return prompt
 }
 
-func (p *Prompt) onEnter() {
-	api, err := ollama.New(ollama.WithBaseURL("http://localhost:7869"), ollama.WithModel("smollm"))
-	if err != nil {
-		panic(err)
-	}
-
-	prompt := prompts.Prompt{
-		Model: prompts.Model("smollm"),
-		Messages: []prompts.Message{
-			&prompts.UserMessage{
-				Content: example,
-			},
-		},
-	}
-
-	res, err := api.Complete(context.Background(), &prompt)
-	if err != nil {
-		panic(err)
-	}
-
-	in := make(chan any, 1)
-
-	source := sources.NewChanSource(res)
-	sink := sinks.NewChanSink(in)
-
-	go func() {
-		for msg := range in {
-			p.app.GetState().Dispatch(state.NewAddMessage(msg.(string)))
-		}
-	}()
-
-	source.Pipe(streams.NewPassThrough()).Pipe(streams.NewMap(mapCompletionMessages)).To(sink)
+func (p *Prompt) onEnter(prompt string) {
+	_ = p.api.CreatePrompt(context.Background(), p.app.GetStore(), prompt)
 }
 
 func (p *Prompt) onInputCapture(event *tcell.EventKey) *tcell.EventKey {

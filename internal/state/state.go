@@ -23,16 +23,15 @@ func NewAddMessage(message string) fsmx.Action {
 }
 
 // AddMessageReducer ...
-func AddMessageReducer(prev fsmx.State, action fsmx.Action) fsmx.State {
+func AddMessageReducer(prev State, action fsmx.Action) State {
 	if action.Type() != AddMessage {
 		return prev
 	}
 
-	state := prev.(*State)
 	payload := action.Payload().(AddMessagePayload)
-	state.Messages = append(state.Messages, payload.Message)
+	prev.Messages = append(prev.Messages, payload.Message)
 
-	return state
+	return prev
 }
 
 const (
@@ -49,8 +48,8 @@ type State struct {
 }
 
 // NewState returns a new state.
-func NewState() *State {
-	return &State{
+func NewState() State {
+	return State{
 		Status:   Initial,
 		Messages: make([]string, 0),
 	}

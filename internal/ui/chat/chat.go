@@ -15,7 +15,7 @@ type Chat struct {
 }
 
 // NewChat returns a chat screen primitive.
-func NewChat(app ui.Application, appName string, appVersion string) *Chat {
+func NewChat(app ui.Application[state.State], appName string, appVersion string) *Chat {
 	chat := &Chat{
 		TextView: tview.NewTextView(),
 		title:    "💬 Chat",
@@ -25,8 +25,9 @@ func NewChat(app ui.Application, appName string, appVersion string) *Chat {
 	chat.SetBorder(true)
 
 	go func() {
-		for s := range app.GetState().Subscribe() {
-			s := s.(*state.State)
+		store := app.GetStore()
+
+		for s := range store.Subscribe() {
 			app.QueueUpdateDraw(func() {
 				chat.SetText(strings.Join(s.Messages, ""))
 				chat.ScrollToEnd()

@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/katallaxie/m/internal/api"
 	"github.com/katallaxie/m/internal/config"
 	"github.com/katallaxie/m/internal/entity"
 	"github.com/katallaxie/m/internal/state"
@@ -11,6 +12,7 @@ import (
 
 	"github.com/epiclabs-io/winman"
 	"github.com/katallaxie/pkg/fsmx"
+	"github.com/katallaxie/prompts/ollama"
 	"github.com/rivo/tview"
 )
 
@@ -27,13 +29,19 @@ type App struct {
 	help        *help.Help
 	infoBar     *infobar.InfoBar
 	config      *config.Config
-	state       fsmx.Store
+	state       fsmx.Store[state.State]
+	api         *api.Api
 }
 
 // New returns a new application.
 func New(appName, version string, cfg *config.Config) *App {
 	a := tview.NewApplication()
 	wm := winman.NewWindowManager()
+
+	client, err := ollama.New(ollama.WithBaseURL("http://localhost:7869"), ollama.WithModel("smollm"))
+	if err != nil {
+		panic(err)
+	}
 
 	app := &App{
 		Application: a,
@@ -42,6 +50,7 @@ func New(appName, version string, cfg *config.Config) *App {
 		pages:       tview.NewPages(),
 		infoBar:     infobar.NewInfoBar("M", "0.1.0"),
 		help:        help.NewHelp("M", "0.1.0"),
+		api:         api.NewApi(client),
 	}
 
 	// State machine
@@ -57,13 +66,22 @@ func New(appName, version string, cfg *config.Config) *App {
 	}
 	app.menu = newMenu(menuItems)
 
+	modal := tview.NewModal().
+		SetText("Do you want to quit the application?").
+		AddButtons([]string{"Quit", "Cancel"}).
+		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
+			if buttonLabel == "Quit" {
+				app.Stop()
+			}
+		})
+
 	sidebarPanel := tview.NewFlex().SetDirection(tview.FlexRow).
 		AddItem(chat.NewNotebookList(), 15, 1, true).
 		AddItem(chat.NewNotebookList(), 0, 1, false)
 
 	mainPanel := tview.NewFlex().SetDirection(tview.FlexRow).
 		AddItem(app.chat, 0, 3, false).
-		AddItem(chat.NewPrompt(app), 0, 1, true)
+		AddItem(chat.NewPrompt(app, app.api), 0, 1, true)
 
 	mainLayout := tview.NewFlex().SetDirection(tview.FlexColumn).
 		AddItem(sidebarPanel, 35, 1, false).
@@ -74,6 +92,9 @@ func New(appName, version string, cfg *config.Config) *App {
 		AddItem(app.infoBar, 3, 1, false).
 		AddItem(mainLayout, 0, 1, true).
 		AddItem(app.menu, 1, 1, false)
+
+	app.pages.AddPage("Quit", modal, true, false)
+	app.pages.AddPage("Main", mainLayout, false, true)
 
 	window := wm.NewWindow().
 		Show().
@@ -88,8 +109,18 @@ func New(appName, version string, cfg *config.Config) *App {
 }
 
 // StateUpdates returns the state updates.
-func (a *App) GetState() fsmx.Store {
+func (a *App) GetState() state.State {
+	return a.state.State()
+}
+
+// GetStore returns the state store.
+func (a *App) GetStore() fsmx.Store[state.State] {
 	return a.state
+}
+
+// Stop stops the application.
+func (a *App) Stop() {
+	a.Application.Stop()
 }
 
 // Run runs the application.
