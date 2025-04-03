@@ -835,6 +835,8 @@ github.com/katallaxie/pkg v0.7.2-0.20250402133648-a14862d04e89 h1:reG0O1nCBTZq/Y
 github.com/katallaxie/pkg v0.7.2-0.20250402133648-a14862d04e89/go.mod h1:7WaCAu/FhPPKDVldVH2sDlfglKYupInPvAq9x8az3Lk=
 github.com/katallaxie/pkg v0.7.2-0.20250403125843-b825b21597dd h1:XGCs6Ks5v11ekEuBaUt2BbyDvSMjLRK1N4JXiuRBCYc=
 github.com/katallaxie/pkg v0.7.2-0.20250403125843-b825b21597dd/go.mod h1:XvNlb6/Ncz/PuwBRxR5lV0mDa2/FdhdHduZQuCy9BVA=
+github.com/katallaxie/pkg v0.7.2-0.20250403141756-3d5bb98ca34e h1:EJ0E6GBAq9u8GXTu/+viyfxG95l7rn2Y5P9S+4z91aw=
+github.com/katallaxie/pkg v0.7.2-0.20250403141756-3d5bb98ca34e/go.mod h1:XvNlb6/Ncz/PuwBRxR5lV0mDa2/FdhdHduZQuCy9BVA=
 github.com/katallaxie/prompts v0.0.0-20250331121107-837e11d6207c h1:HUORSKuQ33EfMvETeEFVK1GerZX9r3NRfMux49+xwa0=
 github.com/katallaxie/prompts v0.0.0-20250331121107-837e11d6207c/go.mod h1:4+cbmQYtZ/Th+iCChopjkRnpxId4yzm27zZkUahpif4=
 github.com/katallaxie/streams v0.3.2-0.20250331120734-f5f017649505 h1:Q2Bmch0RQCUbPAMxO939u76/IXqSp/VGNtckY/fob1A=

@@ -64,7 +64,7 @@ func NewPrompt(app ui.Application[state.State], api *api.Api) *Prompt {
 }
 
 func (p *Prompt) onEnter(prompt string) {
-	fsmx.Effect(p.app.GetStore(), fsmx.EffectFunc[state.State](effects.FetchChatCompletion(p.api, prompt)))
+	fsmx.Effect(p.app.GetStore(), effects.FetchChatCompletion(p.api, prompt))
 }
 
 func (p *Prompt) onInputCapture(event *tcell.EventKey) *tcell.EventKey {

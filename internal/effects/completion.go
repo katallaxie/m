@@ -28,7 +28,7 @@ func (w *NoopWriterCloser) Close() error {
 	return w.Flush()
 }
 
-func FetchChatCompletion(api *api.Api, prompt string) fsmx.EffectFunc[state.State] {
+func FetchChatCompletion(api *api.Api, prompt string) fsmx.EffectFunc {
 	return func(ctx context.Context) (fsmx.Action, error) {
 		res, err := api.CreatePrompt(ctx, prompt)
 		if err != nil {
