@@ -5,6 +5,7 @@ import (
 	"github.com/katallaxie/m/internal/config"
 	"github.com/katallaxie/m/internal/entity"
 	"github.com/katallaxie/m/internal/state"
+	"github.com/katallaxie/m/internal/ui/activity"
 	"github.com/katallaxie/m/internal/ui/chat"
 	"github.com/katallaxie/m/internal/ui/help"
 	"github.com/katallaxie/m/internal/ui/infobar"
@@ -54,7 +55,7 @@ func New(appName, version string, cfg *config.Config) *App {
 	}
 
 	// State machine
-	app.state = fsmx.New(state.NewState(), state.AddMessageReducer)
+	app.state = fsmx.New(state.NewState(), state.AddMessageReducer, state.SetStatusReducer)
 
 	// Chat panel
 	app.chat = chat.NewChat(app, "M", "0.1.0")
@@ -76,8 +77,8 @@ func New(appName, version string, cfg *config.Config) *App {
 		})
 
 	sidebarPanel := tview.NewFlex().SetDirection(tview.FlexRow).
-		AddItem(chat.NewNotebookList(), 15, 1, true).
-		AddItem(chat.NewNotebookList(), 0, 1, false)
+		AddItem(chat.NewNotebookList(), 0, 1, true).
+		AddItem(activity.NewActivity(app), 3, 0, false)
 
 	mainPanel := tview.NewFlex().SetDirection(tview.FlexRow).
 		AddItem(app.chat, 0, 3, false).
@@ -121,6 +122,11 @@ func (a *App) GetStore() fsmx.Store[state.State] {
 // Stop stops the application.
 func (a *App) Stop() {
 	a.Application.Stop()
+}
+
+// Draw draws the application.
+func (a *App) Draw() {
+	a.Application.Draw()
 }
 
 // Run runs the application.

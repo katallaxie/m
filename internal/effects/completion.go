@@ -50,3 +50,9 @@ func FetchChatCompletion(api *api.Api, prompt string) fsmx.EffectFunc {
 		return state.NewAddMessage(b.String()), nil
 	}
 }
+
+func IsLoading() fsmx.EffectFunc {
+	return func(ctx context.Context) (fsmx.Action, error) {
+		return state.NewSetStatus(state.Loading), nil
+	}
+}

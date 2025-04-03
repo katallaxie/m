@@ -7,6 +7,7 @@ import (
 // Actions ...
 const (
 	AddMessage fsmx.ActionType = iota
+	SetStatus
 )
 
 // AddMessagePayload ...
@@ -17,9 +18,16 @@ type AddMessagePayload struct {
 	Message string
 }
 
+// NewSetStatus returns a new action.
+func NewSetStatus(status int) fsmx.Action {
+	return fsmx.NewAction(SetStatus, status)
+}
+
 // NewAddMessage returns a new action.
 func NewAddMessage(message string) fsmx.Action {
-	return fsmx.NewAction(AddMessage, AddMessagePayload{Message: message})
+	return fsmx.NewAction(AddMessage, AddMessagePayload{
+		Message: message,
+	})
 }
 
 // AddMessageReducer ...
@@ -30,6 +38,19 @@ func AddMessageReducer(prev State, action fsmx.Action) State {
 
 	payload := action.Payload().(AddMessagePayload)
 	prev.Messages = append(prev.Messages, payload.Message)
+	prev.Status = Success
+
+	return prev
+}
+
+// SetStatusReducer ...
+func SetStatusReducer(prev State, action fsmx.Action) State {
+	if action.Type() != SetStatus {
+		return prev
+	}
+
+	status := action.Payload().(int)
+	prev.Status = status
 
 	return prev
 }
