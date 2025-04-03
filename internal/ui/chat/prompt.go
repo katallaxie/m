@@ -1,12 +1,13 @@
 package chat
 
 import (
-	"context"
-
-	"github.com/gdamore/tcell/v2"
 	"github.com/katallaxie/m/internal/api"
+	"github.com/katallaxie/m/internal/effects"
 	"github.com/katallaxie/m/internal/state"
 	"github.com/katallaxie/m/internal/ui"
+
+	"github.com/gdamore/tcell/v2"
+	"github.com/katallaxie/pkg/fsmx"
 	"github.com/rivo/tview"
 )
 
@@ -63,7 +64,7 @@ func NewPrompt(app ui.Application[state.State], api *api.Api) *Prompt {
 }
 
 func (p *Prompt) onEnter(prompt string) {
-	_ = p.api.CreatePrompt(context.Background(), p.app.GetStore(), prompt)
+	fsmx.Effect(p.app.GetStore(), fsmx.EffectFunc[state.State](effects.FetchChatCompletion(p.api, prompt)))
 }
 
 func (p *Prompt) onInputCapture(event *tcell.EventKey) *tcell.EventKey {

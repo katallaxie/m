@@ -833,12 +833,18 @@ github.com/katallaxie/pkg v0.7.2-0.20250402121827-b0ea596ea964 h1:gg6RZrYHHEBCjv
 github.com/katallaxie/pkg v0.7.2-0.20250402121827-b0ea596ea964/go.mod h1:7WaCAu/FhPPKDVldVH2sDlfglKYupInPvAq9x8az3Lk=
 github.com/katallaxie/pkg v0.7.2-0.20250402133648-a14862d04e89 h1:reG0O1nCBTZq/Y6Km822OYU3ymFPeK3+TKK03xrqoa8=
 github.com/katallaxie/pkg v0.7.2-0.20250402133648-a14862d04e89/go.mod h1:7WaCAu/FhPPKDVldVH2sDlfglKYupInPvAq9x8az3Lk=
+github.com/katallaxie/pkg v0.7.2-0.20250403125843-b825b21597dd h1:XGCs6Ks5v11ekEuBaUt2BbyDvSMjLRK1N4JXiuRBCYc=
+github.com/katallaxie/pkg v0.7.2-0.20250403125843-b825b21597dd/go.mod h1:XvNlb6/Ncz/PuwBRxR5lV0mDa2/FdhdHduZQuCy9BVA=
 github.com/katallaxie/prompts v0.0.0-20250331121107-837e11d6207c h1:HUORSKuQ33EfMvETeEFVK1GerZX9r3NRfMux49+xwa0=
 github.com/katallaxie/prompts v0.0.0-20250331121107-837e11d6207c/go.mod h1:4+cbmQYtZ/Th+iCChopjkRnpxId4yzm27zZkUahpif4=
 github.com/katallaxie/streams v0.3.2-0.20250331120734-f5f017649505 h1:Q2Bmch0RQCUbPAMxO939u76/IXqSp/VGNtckY/fob1A=
 github.com/katallaxie/streams v0.3.2-0.20250331120734-f5f017649505/go.mod h1:e3MNwzEKyBAWZW9JoS/X2ZfBBAq634qXKga7ZAZxFCM=
 github.com/katallaxie/streams v0.3.3-0.20250402140727-74cdaa65d8d2 h1:x3aSwSjQcS+1X4OXjBXWg3/rC+2V4TkwF6kK6W6w7GM=
 github.com/katallaxie/streams v0.3.3-0.20250402140727-74cdaa65d8d2/go.mod h1:qOYILCmjFhnBpSdXgGrH4QLAUp6oFMqICp3j7QfHIqw=
+github.com/katallaxie/streams v0.3.3-0.20250403135701-9cfd6e33d1b7 h1:amtvaxKMMP39vQ7zxw795z4L+n6j0J6wLhHUUfLVdUE=
+github.com/katallaxie/streams v0.3.3-0.20250403135701-9cfd6e33d1b7/go.mod h1:qOYILCmjFhnBpSdXgGrH4QLAUp6oFMqICp3j7QfHIqw=
+github.com/katallaxie/streams v0.3.3-0.20250403140730-5a727176b3e4 h1:uLb7cD08OZVOkZA6QtkbUZDudxe8PuUtyNRZmRd+tz4=
+github.com/katallaxie/streams v0.3.3-0.20250403140730-5a727176b3e4/go.mod h1:qOYILCmjFhnBpSdXgGrH4QLAUp6oFMqICp3j7QfHIqw=
 github.com/kevinburke/ssh_config v1.2.0 h1:x584FjTGwHzMwvHx18PXxbBVzfnxogHaAReU4gf13a4=
 github.com/kevinburke/ssh_config v1.2.0/go.mod h1:CT57kijsi8u/K/BOFA39wgDQJ9CxiF4nAY/ojJ6r6mM=
 github.com/kisielk/errcheck v1.5.0/go.mod h1:pFxgyoBC7bSaBwPgfKdkLd5X25qrDl4LWUI2bnpBCr8=
@@ -1295,6 +1301,8 @@ go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.59.0 h1:CV7UdSG
 go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.59.0/go.mod h1:FRmFuRJfag1IZ2dPkHnEoSFVgTVPUd2qf5Vi69hLb8I=
 go.opentelemetry.io/otel v1.34.0 h1:zRLXxLCgL1WyKsPVrgbSdMN4c0FMkDAskSTQP+0hdUY=
 go.opentelemetry.io/otel v1.34.0/go.mod h1:OWFPOQ+h4G8xpyjgqo4SxJYdDQ/qmRH+wivy7zzx9oI=
+go.opentelemetry.io/otel v1.35.0 h1:xKWKPxrxB6OtMCbmMY021CqC45J+3Onta9MqjhnusiQ=
+go.opentelemetry.io/otel v1.35.0/go.mod h1:UEqy8Zp11hpkUrL73gSlELM0DupHoiq72dR+Zqel/+Y=
 go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploggrpc v0.8.0 h1:WzNab7hOOLzdDF/EoWCt4glhrbMPVMOO5JYTmpz36Ls=
 go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploggrpc v0.8.0/go.mod h1:hKvJwTzJdp90Vh7p6q/9PAOd55dI6WA6sWj62a/JvSs=
 go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploghttp v0.8.0 h1:S+LdBGiQXtJdowoJoQPEtI52syEP/JYBUpjO49EQhV8=
@@ -1321,6 +1329,8 @@ go.opentelemetry.io/otel/log v0.8.0 h1:egZ8vV5atrUWUbnSsHn6vB8R21G2wrKqNiDt3iWer
 go.opentelemetry.io/otel/log v0.8.0/go.mod h1:M9qvDdUTRCopJcGRKg57+JSQ9LgLBrwwfC32epk5NX8=
 go.opentelemetry.io/otel/metric v1.34.0 h1:+eTR3U0MyfWjRDhmFMxe2SsW64QrZ84AOhvqS7Y+PoQ=
 go.opentelemetry.io/otel/metric v1.34.0/go.mod h1:CEDrp0fy2D0MvkXE+dPV7cMi8tWZwX3dmaIhwPOaqHE=
+go.opentelemetry.io/otel/metric v1.35.0 h1:0znxYu2SNyuMSQT4Y9WDWej0VpcsxkuklLa4/siN90M=
+go.opentelemetry.io/otel/metric v1.35.0/go.mod h1:nKVFgxBZ2fReX6IlyW28MgZojkoAkJGaE8CpgeAU3oE=
 go.opentelemetry.io/otel/sdk v1.34.0 h1:95zS4k/2GOy069d321O8jWgYsW3MzVV+KuSPKp7Wr1A=
 go.opentelemetry.io/otel/sdk v1.34.0/go.mod h1:0e/pNiaMAqaykJGKbi+tSjWfNNHMTxoC9qANsCzbyxU=
 go.opentelemetry.io/otel/sdk/log v0.8.0 h1:zg7GUYXqxk1jnGF/dTdLPrK06xJdrXgqgFLnI4Crxvs=
@@ -1329,6 +1339,8 @@ go.opentelemetry.io/otel/sdk/metric v1.34.0 h1:5CeK9ujjbFVL5c1PhLuStg1wxA7vQv7ce
 go.opentelemetry.io/otel/sdk/metric v1.34.0/go.mod h1:jQ/r8Ze28zRKoNRdkjCZxfs6YvBTG1+YIqyFVFYec5w=
 go.opentelemetry.io/otel/trace v1.34.0 h1:+ouXS2V8Rd4hp4580a8q23bg0azF2nI8cqLYnC8mh/k=
 go.opentelemetry.io/otel/trace v1.34.0/go.mod h1:Svm7lSjQD7kG7KJ/MUHPVXSDGz2OX4h0M2jHBhmSfRE=
+go.opentelemetry.io/otel/trace v1.35.0 h1:dPpEfJu1sDIqruz7BHFG3c7528f6ddfSWfFDVt/xgMs=
+go.opentelemetry.io/otel/trace v1.35.0/go.mod h1:WUk7DtFp1Aw2MkvqGdwiXYDZZNvA/1J8o6xRXLrIkyc=
 go.opentelemetry.io/proto/otlp v1.4.0 h1:TA9WRvW6zMwP+Ssb6fLoUIuirti1gGbP28GcKG1jgeg=
 go.opentelemetry.io/proto/otlp v1.4.0/go.mod h1:PPBWZIP98o2ElSqI35IHfu7hIhSwvc5N38Jw8pXuGFY=
 go.uber.org/atomic v1.6.0/go.mod h1:sABNBOSYdrvTF6hTgEIbc7YasKWGhgEQZyfxyTvoXHQ=

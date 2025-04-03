@@ -18,9 +18,9 @@ require (
 	github.com/gdamore/tcell/v2 v2.8.1
 	github.com/go-playground/validator/v10 v10.26.0
 	github.com/google/uuid v1.6.0
-	github.com/katallaxie/pkg v0.7.2-0.20250402133648-a14862d04e89
+	github.com/katallaxie/pkg v0.7.2-0.20250403125843-b825b21597dd
 	github.com/katallaxie/prompts v0.0.0-20250331121107-837e11d6207c
-	github.com/katallaxie/streams v0.3.3-0.20250402140727-74cdaa65d8d2
+	github.com/katallaxie/streams v0.3.3-0.20250403140730-5a727176b3e4
 	github.com/pkg/errors v0.9.1
 	github.com/rivo/tview v0.0.0-20250325173046-7b72abf45814
 	github.com/spf13/cobra v1.9.1
@@ -464,11 +464,11 @@ require (
 	go.opentelemetry.io/contrib/detectors/gcp v1.34.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.59.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.59.0 // indirect
-	go.opentelemetry.io/otel v1.34.0 // indirect
-	go.opentelemetry.io/otel/metric v1.34.0 // indirect
+	go.opentelemetry.io/otel v1.35.0 // indirect
+	go.opentelemetry.io/otel/metric v1.35.0 // indirect
 	go.opentelemetry.io/otel/sdk v1.34.0 // indirect
 	go.opentelemetry.io/otel/sdk/metric v1.34.0 // indirect
-	go.opentelemetry.io/otel/trace v1.34.0 // indirect
+	go.opentelemetry.io/otel/trace v1.35.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/automaxprocs v1.6.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
