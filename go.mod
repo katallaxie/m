@@ -21,7 +21,7 @@ require (
 	github.com/katallaxie/pkg v0.7.2-0.20250403141756-3d5bb98ca34e
 	github.com/katallaxie/prompts v0.0.0-20250331121107-837e11d6207c
 	github.com/katallaxie/streams v0.3.3-0.20250403140730-5a727176b3e4
-	github.com/navidys/tvxwidgets v0.10.0
+	github.com/navidys/tvxwidgets v0.11.0
 	github.com/pkg/errors v0.9.1
 	github.com/rivo/tview v0.0.0-20250325173046-7b72abf45814
 	github.com/spf13/cobra v1.9.1
