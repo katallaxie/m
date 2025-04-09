@@ -3,7 +3,7 @@ package chat
 import (
 	"strings"
 
-	"github.com/katallaxie/m/internal/state"
+	"github.com/katallaxie/m/internal/store"
 	"github.com/katallaxie/m/internal/ui"
 	"github.com/rivo/tview"
 )
@@ -15,7 +15,7 @@ type Chat struct {
 }
 
 // NewChat returns a chat screen primitive.
-func NewChat(app ui.Application[state.State], appName string, appVersion string) *Chat {
+func NewChat(app ui.Application[store.State], appName string, appVersion string) *Chat {
 	chat := &Chat{
 		TextView: tview.NewTextView(),
 		title:    "💬 Chat",
@@ -29,7 +29,7 @@ func NewChat(app ui.Application[state.State], appName string, appVersion string)
 
 		for s := range store.Subscribe() {
 			app.QueueUpdateDraw(func() {
-				chat.SetText(strings.Join(s.Messages, ""))
+				chat.SetText(strings.Join(s.Curr().Messages, ""))
 				chat.ScrollToEnd()
 			})
 		}

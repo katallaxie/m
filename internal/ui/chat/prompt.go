@@ -1,13 +1,14 @@
 package chat
 
 import (
+	"context"
+
 	"github.com/katallaxie/m/internal/api"
-	"github.com/katallaxie/m/internal/effects"
-	"github.com/katallaxie/m/internal/state"
+	"github.com/katallaxie/m/internal/store"
 	"github.com/katallaxie/m/internal/ui"
+	"github.com/katallaxie/prompts"
 
 	"github.com/gdamore/tcell/v2"
-	"github.com/katallaxie/pkg/fsmx"
 	"github.com/rivo/tview"
 )
 
@@ -30,11 +31,11 @@ type Prompt struct {
 	*tview.TextArea
 	state *PromptState
 	api   *api.Api
-	app   ui.Application[state.State]
+	app   ui.Application[store.State]
 }
 
 // NewPrompt returns a new chat prompt.
-func NewPrompt(app ui.Application[state.State], api *api.Api) *Prompt {
+func NewPrompt(app ui.Application[store.State], api *api.Api) *Prompt {
 	prompt := &Prompt{
 		TextArea: tview.NewTextArea(),
 		state: &PromptState{
@@ -64,8 +65,18 @@ func NewPrompt(app ui.Application[state.State], api *api.Api) *Prompt {
 }
 
 func (p *Prompt) onEnter(prompt string) {
-	fsmx.Effect(p.app.GetStore(), effects.IsLoading())
-	go fsmx.Effect(p.app.GetStore(), effects.FetchChatCompletion(p.api, prompt))
+	go func() {
+		p.app.GetStore().Dispatch(store.NewSetStatus(store.Loading))
+
+		fn := func(res *prompts.ChatCompletionResponse) error {
+			p.app.GetStore().Dispatch(store.NewAddMessage(res.String()))
+
+			return nil
+		}
+
+		_ = p.api.CreatePrompt(context.Background(), prompt, fn)
+		p.app.GetStore().Dispatch(store.NewSetStatus(store.Success))
+	}()
 }
 
 func (p *Prompt) onInputCapture(event *tcell.EventKey) *tcell.EventKey {

@@ -673,8 +673,16 @@ github.com/karamaru-alpha/copyloopvar v1.2.1 h1:wmZaZYIjnJ0b5UoKDjUHrikcV0zuPyyx
 github.com/karamaru-alpha/copyloopvar v1.2.1/go.mod h1:nFmMlFNlClC2BPvNaHMdkirmTJxVCY0lhxBtlfOypMM=
 github.com/katallaxie/pkg v0.7.3 h1:6JjhG9sCG92JRlsDVaClJTJhY6W47Dk0RQyuR91ZoNo=
 github.com/katallaxie/pkg v0.7.3/go.mod h1:wJbYMdjVifWM+rjyX1dmUgWhFm62Qec96OO0nIkMvWs=
+github.com/katallaxie/pkg v0.7.4 h1:LDbKXBRG4zSYR9zxzHmFsfYFB69wcIWhks/7bjmNT1Y=
+github.com/katallaxie/pkg v0.7.4/go.mod h1:wJbYMdjVifWM+rjyX1dmUgWhFm62Qec96OO0nIkMvWs=
+github.com/katallaxie/pkg v0.7.5 h1:hangDdxxYzFIGbVnQ/ikSw7+bBxWGS754dPvoGLUJbw=
+github.com/katallaxie/pkg v0.7.5/go.mod h1:wJbYMdjVifWM+rjyX1dmUgWhFm62Qec96OO0nIkMvWs=
+github.com/katallaxie/pkg v0.7.6-0.20250409090138-361972ce97bf h1:j2o3vUl8yimAMUlc7elnItbJaJVjPU4ITJh2DrebErY=
+github.com/katallaxie/pkg v0.7.6-0.20250409090138-361972ce97bf/go.mod h1:wJbYMdjVifWM+rjyX1dmUgWhFm62Qec96OO0nIkMvWs=
 github.com/katallaxie/prompts v0.0.0-20250331121107-837e11d6207c h1:HUORSKuQ33EfMvETeEFVK1GerZX9r3NRfMux49+xwa0=
 github.com/katallaxie/prompts v0.0.0-20250331121107-837e11d6207c/go.mod h1:4+cbmQYtZ/Th+iCChopjkRnpxId4yzm27zZkUahpif4=
+github.com/katallaxie/prompts v0.0.3 h1:miJ12MCDx//2Ahnwd451bdMZYWZVa4Pgyj8O1+rBQtM=
+github.com/katallaxie/prompts v0.0.3/go.mod h1:jVqBaHiv4agmHxWvIeSzniJNC/HLLc1JHXxRtEWBOBg=
 github.com/katallaxie/streams v0.4.0 h1:2taUjQ13Wr3LShadGBOFFwn2N/osNILN55gHVggPmy0=
 github.com/katallaxie/streams v0.4.0/go.mod h1:ttJdyecOnp+fu4j6VN8650/7g51G5+ucdoG+f/wVDwY=
 github.com/kevinburke/ssh_config v1.2.0 h1:x584FjTGwHzMwvHx18PXxbBVzfnxogHaAReU4gf13a4=

@@ -19,24 +19,25 @@ func NewApi(client *ollama.Ollama) *Api {
 }
 
 // CreatePrompt creates a new prompt.
-func (a *Api) CreatePrompt(ctx context.Context, p string) (chan any, error) {
-	prompt := prompts.Prompt{
-		Model: prompts.Model("smollm"),
-		Messages: []prompts.Message{
-			&prompts.UserMessage{
-				Content: p,
-			},
+func (a *Api) CreatePrompt(ctx context.Context, p string, cb ...func(res *prompts.ChatCompletionResponse) error) error {
+	msg := []prompts.ChatCompletionMessage{
+		{
+			Role:    "system",
+			Content: "You are a helpful assistant. You start every answers with 'Sure!'",
+		},
+		{
+			Role:    "user",
+			Content: p,
 		},
 	}
 
-	// res, err := a.client.Complete(context.Background(), &prompt)
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// source := sources.NewChanSource(res)
-	// sink := sinks.NewFSMStore(store, completionAction)
+	req := ollama.NewStreamCompletionRequest()
+	req.AddMessages(msg...)
 
-	// source.Pipe(streams.NewPassThrough()).Pipe(streams.NewMap(mapCompletionMessages)).To(sink)
+	err := a.client.SendStreamCompletionRequest(context.Background(), req, cb...)
+	if err != nil {
+		return err
+	}
 
-	return a.client.Complete(context.Background(), &prompt)
+	return nil
 }

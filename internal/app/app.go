@@ -4,7 +4,7 @@ import (
 	"github.com/katallaxie/m/internal/api"
 	"github.com/katallaxie/m/internal/config"
 	"github.com/katallaxie/m/internal/entity"
-	"github.com/katallaxie/m/internal/state"
+	"github.com/katallaxie/m/internal/store"
 	"github.com/katallaxie/m/internal/ui/activity"
 	"github.com/katallaxie/m/internal/ui/chat"
 	"github.com/katallaxie/m/internal/ui/help"
@@ -12,7 +12,7 @@ import (
 	"github.com/katallaxie/m/internal/ui/utils"
 
 	"github.com/epiclabs-io/winman"
-	"github.com/katallaxie/pkg/fsmx"
+	"github.com/katallaxie/pkg/redux"
 	"github.com/katallaxie/prompts/ollama"
 	"github.com/rivo/tview"
 )
@@ -30,7 +30,7 @@ type App struct {
 	help        *help.Help
 	infoBar     *infobar.InfoBar
 	config      *config.Config
-	state       fsmx.Store[state.State]
+	state       redux.Store[store.State]
 	api         *api.Api
 }
 
@@ -39,10 +39,7 @@ func New(appName, version string, cfg *config.Config) *App {
 	a := tview.NewApplication()
 	wm := winman.NewWindowManager()
 
-	client, err := ollama.New(ollama.WithBaseURL("http://localhost:7869"), ollama.WithModel("smollm"))
-	if err != nil {
-		panic(err)
-	}
+	client := ollama.New()
 
 	app := &App{
 		Application: a,
@@ -55,7 +52,7 @@ func New(appName, version string, cfg *config.Config) *App {
 	}
 
 	// State machine
-	app.state = fsmx.New(state.NewState(), state.AddMessageReducer, state.SetStatusReducer)
+	app.state = redux.New(store.NewState(), store.AddMessageReducer, store.SetStatusReducer)
 
 	// Chat panel
 	app.chat = chat.NewChat(app, "M", "0.1.0")
@@ -110,12 +107,12 @@ func New(appName, version string, cfg *config.Config) *App {
 }
 
 // StateUpdates returns the state updates.
-func (a *App) GetState() state.State {
+func (a *App) GetState() store.State {
 	return a.state.State()
 }
 
 // GetStore returns the state store.
-func (a *App) GetStore() fsmx.Store[state.State] {
+func (a *App) GetStore() redux.Store[store.State] {
 	return a.state
 }
 

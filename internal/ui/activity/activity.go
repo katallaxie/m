@@ -3,8 +3,9 @@ package activity
 import (
 	"time"
 
-	"github.com/katallaxie/m/internal/state"
+	"github.com/katallaxie/m/internal/store"
 	"github.com/katallaxie/m/internal/ui"
+	"github.com/katallaxie/pkg/utilx"
 	"github.com/navidys/tvxwidgets"
 
 	"github.com/gdamore/tcell/v2"
@@ -16,11 +17,11 @@ type Activity struct {
 	*tview.Flex
 	gauge *tvxwidgets.ActivityModeGauge
 	stop  chan struct{}
-	app   ui.Application[state.State]
+	app   ui.Application[store.State]
 }
 
 // NewActivity returns a new chat activity.
-func NewActivity(app ui.Application[state.State]) *Activity {
+func NewActivity(app ui.Application[store.State]) *Activity {
 	activity := &Activity{
 		Flex:  tview.NewFlex(),
 		gauge: tvxwidgets.NewActivityModeGauge(),
@@ -38,14 +39,18 @@ func NewActivity(app ui.Application[state.State]) *Activity {
 	sub := app.GetStore().Subscribe()
 
 	go func() {
-		for current := range sub {
-			if current.Status == state.Loading {
+		for change := range sub {
+			if utilx.Equal(change.Curr().Status, change.Prev().Status) {
+				continue
+			}
+
+			if change.Curr().Status == store.Loading {
 				activity.Clear()
 				activity.AddItem(activity.gauge, 0, 1, true)
 				go activity.onLoading()
 			}
 
-			if current.Status != state.Loading {
+			if change.Curr().Status != store.Loading {
 				activity.stop <- struct{}{}
 				activity.Clear()
 			}

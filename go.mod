@@ -17,8 +17,8 @@ require (
 	github.com/gdamore/tcell/v2 v2.8.1
 	github.com/go-playground/validator/v10 v10.26.0
 	github.com/google/uuid v1.6.0
-	github.com/katallaxie/pkg v0.7.3
-	github.com/katallaxie/prompts v0.0.0-20250331121107-837e11d6207c
+	github.com/katallaxie/pkg v0.7.6-0.20250409090138-361972ce97bf
+	github.com/katallaxie/prompts v0.0.3
 	github.com/katallaxie/streams v0.4.0
 	github.com/navidys/tvxwidgets v0.11.0
 	github.com/pkg/errors v0.9.1

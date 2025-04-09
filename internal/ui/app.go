@@ -1,14 +1,14 @@
 package ui
 
 import (
-	"github.com/katallaxie/pkg/fsmx"
+	"github.com/katallaxie/pkg/redux"
 )
 
 // Application ...
-type Application[S fsmx.State] interface {
+type Application[S redux.State] interface {
 	QueueUpdateDraw(f func())
 	GetState() S
-	GetStore() fsmx.Store[S]
+	GetStore() redux.Store[S]
 	Stop()
 	Draw()
 }
