@@ -19,7 +19,7 @@ require (
 	github.com/go-playground/validator/v10 v10.26.0
 	github.com/google/uuid v1.6.0
 	github.com/katallaxie/pkg v0.7.2-0.20250403141756-3d5bb98ca34e
-	github.com/katallaxie/prompts v0.0.0-20250331121107-837e11d6207c
+	github.com/katallaxie/prompts v0.0.3
 	github.com/katallaxie/streams v0.3.3-0.20250403140730-5a727176b3e4
 	github.com/navidys/tvxwidgets v0.11.0
 	github.com/pkg/errors v0.9.1
@@ -370,7 +370,6 @@ require (
 	github.com/nunnatsa/ginkgolinter v0.19.1 // indirect
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
-	github.com/ollama/ollama v0.6.2 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0 // indirect
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
@@ -481,6 +480,7 @@ require (
 	golang.org/x/crypto v0.36.0 // indirect
 	golang.org/x/exp v0.0.0-20250218142911-aa4b98e5adaa // indirect
 	golang.org/x/exp/typeparams v0.0.0-20250210185358-939b2ce775ac // indirect
+	golang.org/x/image v0.22.0 // indirect
 	golang.org/x/mod v0.24.0 // indirect
 	golang.org/x/net v0.37.0 // indirect
 	golang.org/x/oauth2 v0.28.0 // indirect
