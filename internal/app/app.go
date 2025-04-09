@@ -3,9 +3,12 @@ package app
 import (
 	"context"
 
+	"github.com/gdamore/tcell/v2"
 	"github.com/katallaxie/m/internal/api"
+	"github.com/katallaxie/m/internal/cmd"
 	"github.com/katallaxie/m/internal/config"
 	"github.com/katallaxie/m/internal/entity"
+	"github.com/katallaxie/m/internal/keymap"
 	"github.com/katallaxie/m/internal/store"
 	"github.com/katallaxie/m/internal/ui/activity"
 	"github.com/katallaxie/m/internal/ui/chat"
@@ -28,7 +31,6 @@ type App struct {
 	pages       *tview.Pages
 	menu        *tview.TextView
 	chat        *chat.Chat
-	help        *help.Help
 	infoBar     *infobar.InfoBar
 	config      *config.Config
 	state       redux.Store[store.State]
@@ -50,7 +52,6 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 		theme:       &entity.TerminalTheme,
 		pages:       tview.NewPages(),
 		infoBar:     infobar.NewInfoBar("M", "0.1.0"),
-		help:        help.NewHelp("M", "0.1.0"),
 		api:         api.NewApi(client),
 		config:      cfg,
 	}
@@ -63,7 +64,6 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 
 	// menu items
 	menuItems := [][]string{
-		{utils.HelpScreenKey.Label(), app.help.GetTitle()},
 		{utils.ChatScreenKey.Label(), app.chat.GetTitle()},
 	}
 	app.menu = newMenu(menuItems)
@@ -95,17 +95,43 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 		AddItem(mainLayout, 0, 1, true).
 		AddItem(app.menu, 1, 1, false)
 
-	app.pages.AddPage("Quit", modal, true, false)
-	app.pages.AddPage("Main", mainLayout, false, true)
+	app.pages.AddPage("Quit", modal, false, false)
+	app.pages.AddPage("Main", layout, true, true)
+	app.pages.AddPage("Help", help.NewHelpModal(app), true, false)
+	// app.pages.AddPage(fmt.Sprintf("Help"),
+	// 	tview.NewModal().
+	// 		SetText(fmt.Sprintf("This is page %d. Choose where to go next.")).
+	// 		AddButtons([]string{"Next", "Quit"}).
+	// 		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
+	// 			// if buttonIndex == 0 {
+	// 			// 	pages.SwitchToPage(fmt.Sprintf("page-%d", (page+1)%pageCount))
+	// 			// } else {
+	// 			// 	app.Stop()
+	// 			// }
+	// 		}),
+	// 	false, false)
 
 	window := wm.NewWindow().
 		Show().
-		SetRoot(layout).
+		SetRoot(app.pages).
 		SetBorder(false)
 
-	app.SetRoot(window, true)
+	// app.SetRoot(window, true)
 	app.EnableMouse(true)
 	app.EnablePaste(false)
+
+	app.SetRoot(window, true)
+	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		command := keymap.Keymaps.Group(keymap.HomeGroup).Resolve(event)
+
+		if command == cmd.HelpPopup {
+			app.pages.ShowPage("Help")
+		}
+
+		return event
+	})
+
+	app.SetFocus(app.chat)
 
 	return app
 }
@@ -113,6 +139,11 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 // Context returns the context of the application.
 func (a *App) Context() context.Context {
 	return a.ctx
+}
+
+// Pages returns the pages of the application.
+func (a *App) Pages() *tview.Pages {
+	return a.pages
 }
 
 // StateUpdates returns the state updates.

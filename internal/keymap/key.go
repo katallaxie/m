@@ -2,13 +2,15 @@ package keymap
 
 import "github.com/gdamore/tcell/v2"
 
-// Key is a structure that represents a key that can be bound
-// to an command
+// Key is a structure that represents a key that can be bound to an command.
 type Key struct {
-	Code tcell.Key // Special character codes.
-	Char rune      // used when the key represents a single ascii char like "a" or "2".
+	// Code is the tcell key code
+	Code tcell.Key
+	// Char is the rune that is associated with the key
+	Char rune
 }
 
+// String returns a string representation of the key.
 func (k Key) String() string {
 	if k.Char != 0 {
 		return string(k.Char)

@@ -32,7 +32,7 @@ func NewActivity(app ui.Application[store.State]) *Activity {
 	activity.gauge.SetPgBgColor(tcell.ColorOrange)
 
 	activity.SetTitle(" 🏃‍♂️ Activity")
-	activity.SetRect(10, 4, 50, 3)
+	activity.SetRect(10, 4, 50, 4)
 	activity.SetBorder(true)
 
 	activity.SetDirection(tview.FlexColumn)

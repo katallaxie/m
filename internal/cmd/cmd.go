@@ -68,6 +68,7 @@ const (
 	FocusSidebar
 	UnfocusSidebar
 	ToggleSidebar
+	Close
 
 	// Connection
 	NewConnection

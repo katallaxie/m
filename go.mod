@@ -14,12 +14,12 @@ tool (
 require (
 	github.com/derailed/tview v0.8.5
 	github.com/epiclabs-io/winman v0.0.0-20220901164457-3d8c4b3ae090
+	github.com/gdamore/tcell v1.4.0
 	github.com/gdamore/tcell/v2 v2.8.1
 	github.com/go-playground/validator/v10 v10.26.0
 	github.com/google/uuid v1.6.0
 	github.com/katallaxie/pkg v0.7.6-0.20250409090138-361972ce97bf
 	github.com/katallaxie/prompts v0.0.4
-	github.com/katallaxie/streams v0.4.0
 	github.com/navidys/tvxwidgets v0.11.0
 	github.com/pkg/errors v0.9.1
 	github.com/rivo/tview v0.0.0-20250325173046-7b72abf45814
@@ -170,6 +170,7 @@ require (
 	github.com/dimchansky/utfbom v1.1.1 // indirect
 	github.com/distribution/distribution/v3 v3.0.0-rc.4 // indirect
 	github.com/distribution/reference v0.6.0 // indirect
+	github.com/dlclark/regexp2 v1.11.4 // indirect
 	github.com/dnephin/pflag v1.0.7 // indirect
 	github.com/docker/cli v27.5.0+incompatible // indirect
 	github.com/docker/distribution v2.8.3+incompatible // indirect
@@ -329,7 +330,6 @@ require (
 	github.com/nunnatsa/ginkgolinter v0.19.1 // indirect
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
-	github.com/ollama/ollama v0.6.2 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0 // indirect
 	github.com/opencontainers/runc v1.1.14 // indirect
