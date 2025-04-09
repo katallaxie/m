@@ -72,7 +72,7 @@ func (p *Prompt) onEnter(prompt string) {
 			return nil
 		}
 
-		_ = p.api.CreatePrompt(p.app.Context(), prompt, fn)
+		_ = p.api.CreatePrompt(p.app.Context(), p.app.Config().Spec.Api.Model, prompt, fn)
 		p.app.GetStore().Dispatch(store.NewSetStatus(store.Success))
 	}()
 }

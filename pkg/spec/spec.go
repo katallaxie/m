@@ -28,11 +28,13 @@ const (
 // Api is the configuration for the API.
 type Api struct {
 	// Model is the model to use.
-	Model string `yaml:"model" validate:"required"`
+	Model string `yaml:"model"`
 	// Provider is the provider for the model.
 	Provider string `yaml:"provider" validate:"required"`
 	// URL is the URL for the API.
 	URL string `yaml:"url"`
+	// Key is the key for the API.
+	Key string `yaml:"key"`
 }
 
 // Spec is the configuration specification for `m`.
@@ -53,6 +55,7 @@ func (s *Spec) UnmarshalYAML(data []byte) error {
 			Model    string `yaml:"model" validate:"required"`
 			Provider string `yaml:"provider" validate:"required"`
 			URL      string `yaml:"url"`
+			Key      string `yaml:"key"`
 		} `yaml:"api" validate:"required"`
 	}{}
 
@@ -61,7 +64,7 @@ func (s *Spec) UnmarshalYAML(data []byte) error {
 	}
 
 	s.Version = spec.Version
-	s.Api = Api{spec.Api.Model, spec.Api.Provider, spec.Api.URL}
+	s.Api = Api{spec.Api.Model, spec.Api.Provider, spec.Api.URL, spec.Api.Key}
 
 	return nil
 }

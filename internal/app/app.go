@@ -15,7 +15,6 @@ import (
 
 	"github.com/epiclabs-io/winman"
 	"github.com/katallaxie/pkg/redux"
-	"github.com/katallaxie/prompts/ollama"
 	"github.com/rivo/tview"
 )
 
@@ -42,7 +41,7 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 	a := tview.NewApplication()
 	wm := winman.NewWindowManager()
 
-	client := ollama.New()
+	client := api.ClientFactory(cfg.Spec.Api.Provider, cfg.Spec.Api.Model, cfg.Spec.Api.URL, cfg.Spec.Api.Key)
 
 	app := &App{
 		Application: a,
@@ -53,6 +52,7 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 		infoBar:     infobar.NewInfoBar("M", "0.1.0"),
 		help:        help.NewHelp("M", "0.1.0"),
 		api:         api.NewApi(client),
+		config:      cfg,
 	}
 
 	// State machine
@@ -133,6 +133,11 @@ func (a *App) Stop() {
 // Draw draws the application.
 func (a *App) Draw() {
 	a.Application.Draw()
+}
+
+// Config returns the configuration of the application.
+func (a *App) Config() *config.Config {
+	return a.config
 }
 
 // Run runs the application.

@@ -683,6 +683,8 @@ github.com/katallaxie/prompts v0.0.0-20250331121107-837e11d6207c h1:HUORSKuQ33Ef
 github.com/katallaxie/prompts v0.0.0-20250331121107-837e11d6207c/go.mod h1:4+cbmQYtZ/Th+iCChopjkRnpxId4yzm27zZkUahpif4=
 github.com/katallaxie/prompts v0.0.3 h1:miJ12MCDx//2Ahnwd451bdMZYWZVa4Pgyj8O1+rBQtM=
 github.com/katallaxie/prompts v0.0.3/go.mod h1:jVqBaHiv4agmHxWvIeSzniJNC/HLLc1JHXxRtEWBOBg=
+github.com/katallaxie/prompts v0.0.4 h1:gABwO1fgGzM1BQYYdWb2zXnuWHQqDJiMfsvEe0JPOa4=
+github.com/katallaxie/prompts v0.0.4/go.mod h1:mcR55uZZYXQX2DyhLbIBugicGnSpLb6lRcANb6p8hLc=
 github.com/katallaxie/streams v0.4.0 h1:2taUjQ13Wr3LShadGBOFFwn2N/osNILN55gHVggPmy0=
 github.com/katallaxie/streams v0.4.0/go.mod h1:ttJdyecOnp+fu4j6VN8650/7g51G5+ucdoG+f/wVDwY=
 github.com/kevinburke/ssh_config v1.2.0 h1:x584FjTGwHzMwvHx18PXxbBVzfnxogHaAReU4gf13a4=
