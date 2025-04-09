@@ -57,7 +57,7 @@ func runRoot(ctx context.Context, args ...string) error {
 		return err
 	}
 
-	err = app.New("M", version, cfg).Run()
+	err = app.New(ctx, "M", version, cfg).Run()
 	if err != nil {
 		return err
 	}

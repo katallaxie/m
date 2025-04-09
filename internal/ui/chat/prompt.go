@@ -1,8 +1,6 @@
 package chat
 
 import (
-	"context"
-
 	"github.com/katallaxie/m/internal/api"
 	"github.com/katallaxie/m/internal/store"
 	"github.com/katallaxie/m/internal/ui"
@@ -55,7 +53,7 @@ func NewPrompt(app ui.Application[store.State], api *api.Api) *Prompt {
 
 	prompt.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		if event.Key() == tcell.KeyEnter {
-			prompt.onEnter(example)
+			prompt.onEnter(prompt.GetText())
 		}
 
 		return event
@@ -74,7 +72,7 @@ func (p *Prompt) onEnter(prompt string) {
 			return nil
 		}
 
-		_ = p.api.CreatePrompt(context.Background(), prompt, fn)
+		_ = p.api.CreatePrompt(p.app.Context(), prompt, fn)
 		p.app.GetStore().Dispatch(store.NewSetStatus(store.Success))
 	}()
 }

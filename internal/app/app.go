@@ -1,6 +1,8 @@
 package app
 
 import (
+	"context"
+
 	"github.com/katallaxie/m/internal/api"
 	"github.com/katallaxie/m/internal/config"
 	"github.com/katallaxie/m/internal/entity"
@@ -32,10 +34,11 @@ type App struct {
 	config      *config.Config
 	state       redux.Store[store.State]
 	api         *api.Api
+	ctx         context.Context
 }
 
 // New returns a new application.
-func New(appName, version string, cfg *config.Config) *App {
+func New(ctx context.Context, appName, version string, cfg *config.Config) *App {
 	a := tview.NewApplication()
 	wm := winman.NewWindowManager()
 
@@ -43,6 +46,7 @@ func New(appName, version string, cfg *config.Config) *App {
 
 	app := &App{
 		Application: a,
+		ctx:         ctx,
 		winMan:      wm,
 		theme:       &entity.TerminalTheme,
 		pages:       tview.NewPages(),
@@ -104,6 +108,11 @@ func New(appName, version string, cfg *config.Config) *App {
 	app.EnablePaste(false)
 
 	return app
+}
+
+// Context returns the context of the application.
+func (a *App) Context() context.Context {
+	return a.ctx
 }
 
 // StateUpdates returns the state updates.

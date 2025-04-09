@@ -25,12 +25,22 @@ const (
 	DefaultFilename = ".m.yml"
 )
 
+// Api is the configuration for the API.
+type Api struct {
+	// Model is the model to use.
+	Model string `yaml:"model" validate:"required"`
+	// Provider is the provider for the model.
+	Provider string `yaml:"provider" validate:"required"`
+	// URL is the URL for the API.
+	URL string `yaml:"url"`
+}
+
 // Spec is the configuration specification for `m`.
 type Spec struct {
 	// Version is the version of the configuration file.
 	Version int `yaml:"version" validate:"required,eq=1"`
-	// Model is the model to use.
-	Model string `yaml:"model" validate:"required"`
+	// Api is the API configuration.
+	Api Api `yaml:"api" validate:"required"`
 
 	sync.Mutex `yaml:"-"`
 }
@@ -38,8 +48,12 @@ type Spec struct {
 // UnmarshalYAML unmarshals the configuration file.
 func (s *Spec) UnmarshalYAML(data []byte) error {
 	spec := struct {
-		Version int    `yaml:"version" validate:"required,eq=1"`
-		Model   string `yaml:"model" validate:"required"`
+		Version int `yaml:"version" validate:"required,eq=1"`
+		Api     struct {
+			Model    string `yaml:"model" validate:"required"`
+			Provider string `yaml:"provider" validate:"required"`
+			URL      string `yaml:"url"`
+		} `yaml:"api" validate:"required"`
 	}{}
 
 	if err := yaml.Unmarshal(data, &spec); err != nil {
@@ -47,7 +61,7 @@ func (s *Spec) UnmarshalYAML(data []byte) error {
 	}
 
 	s.Version = spec.Version
-	s.Model = spec.Model
+	s.Api = Api{spec.Api.Model, spec.Api.Provider, spec.Api.URL}
 
 	return nil
 }
