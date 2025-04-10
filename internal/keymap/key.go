@@ -8,6 +8,8 @@ type Key struct {
 	Code tcell.Key
 	// Char is the rune that is associated with the key
 	Char rune
+	// Mod is the modifier that is associated with the key
+	Mod tcell.ModMask
 }
 
 // String returns a string representation of the key.

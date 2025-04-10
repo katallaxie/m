@@ -14,6 +14,7 @@ import (
 	"github.com/katallaxie/m/internal/ui/chat"
 	"github.com/katallaxie/m/internal/ui/help"
 	"github.com/katallaxie/m/internal/ui/infobar"
+	"github.com/katallaxie/m/internal/ui/modals"
 	"github.com/katallaxie/m/internal/ui/utils"
 
 	"github.com/epiclabs-io/winman"
@@ -64,18 +65,11 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 
 	// menu items
 	menuItems := [][]string{
+		{utils.HelpScreenKey.Label(), "Help"},
 		{utils.ChatScreenKey.Label(), app.chat.GetTitle()},
+		{utils.AppExitKey.Label(), "Quit"},
 	}
 	app.menu = newMenu(menuItems)
-
-	modal := tview.NewModal().
-		SetText("Do you want to quit the application?").
-		AddButtons([]string{"Quit", "Cancel"}).
-		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
-			if buttonLabel == "Quit" {
-				app.Stop()
-			}
-		})
 
 	sidebarPanel := tview.NewFlex().SetDirection(tview.FlexRow).
 		AddItem(chat.NewNotebookList(), 0, 1, true).
@@ -95,21 +89,9 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 		AddItem(mainLayout, 0, 1, true).
 		AddItem(app.menu, 1, 1, false)
 
-	app.pages.AddPage("Quit", modal, false, false)
 	app.pages.AddPage("Main", layout, true, true)
-	app.pages.AddPage("Help", help.NewHelpModal(app), true, false)
-	// app.pages.AddPage(fmt.Sprintf("Help"),
-	// 	tview.NewModal().
-	// 		SetText(fmt.Sprintf("This is page %d. Choose where to go next.")).
-	// 		AddButtons([]string{"Next", "Quit"}).
-	// 		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
-	// 			// if buttonIndex == 0 {
-	// 			// 	pages.SwitchToPage(fmt.Sprintf("page-%d", (page+1)%pageCount))
-	// 			// } else {
-	// 			// 	app.Stop()
-	// 			// }
-	// 		}),
-	// 	false, false)
+	app.pages.AddPage("Help", help.NewHelpModal(app), false, false)
+	app.pages.AddPage("Quit", modals.NewQuitModal(app), false, false)
 
 	window := wm.NewWindow().
 		Show().
@@ -126,6 +108,10 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 
 		if command == cmd.HelpPopup {
 			app.pages.ShowPage("Help")
+		}
+
+		if command == cmd.Quit {
+			app.pages.ShowPage("Quit")
 		}
 
 		return event

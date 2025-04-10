@@ -38,7 +38,8 @@ const (
 var Keymaps = KeymapSystem{
 	Groups: map[string]Map{
 		HomeGroup: {
-			Bind{Key: Key{Code: tcell.KeyF1}, Cmd: cmd.HelpPopup, Description: "Help"},
+			Bind{Key: Key{Code: tcell.KeyF1, Mod: tcell.ModNone}, Cmd: cmd.HelpPopup, Description: "Help"},
+			Bind{Key: Key{Code: tcell.KeyCtrlQ, Mod: tcell.ModCtrl}, Cmd: cmd.Quit, Description: "Quit"},
 		},
 		HelpGroup: {
 			Bind{Key: Key{Code: tcell.KeyEsc}, Cmd: cmd.Close, Description: "Close"},
@@ -48,7 +49,7 @@ var Keymaps = KeymapSystem{
 			Bind{Key: Key{Char: 'H'}, Cmd: cmd.MoveLeft, Description: "Focus tree"},
 			Bind{Key: Key{Code: tcell.KeyCtrlE}, Cmd: cmd.SwitchToEditorView, Description: "Open SQL editor"},
 			Bind{Key: Key{Code: tcell.KeyCtrlS}, Cmd: cmd.Save, Description: "Execute pending changes"},
-			Bind{Key: Key{Char: 'q'}, Cmd: cmd.Quit, Description: "Quit"},
+			// Bind{Key: Key{Char: 'q'}, Cmd: cmd.Quit, Description: "Quit"},
 			Bind{Key: Key{Code: tcell.KeyBackspace2}, Cmd: cmd.SwitchToConnectionsView, Description: "Switch to connections list"},
 			Bind{Key: Key{Char: '?'}, Cmd: cmd.HelpPopup, Description: "Help"},
 			Bind{Key: Key{Code: tcell.KeyCtrlP}, Cmd: cmd.SearchGlobal, Description: "Global search"},
@@ -65,11 +66,11 @@ type Map []Bind
 // If no binding could be found. commands.Noop is returned.
 func (m Map) Resolve(event *tcell.EventKey) cmd.Command {
 	for _, bind := range m {
-		if event.Key() == tcell.KeyRune {
+		if event.Key() == tcell.KeyRune && event.Modifiers() == bind.Key.Mod {
 			if bind.Key.Char == event.Rune() {
 				return bind.Cmd
 			}
-		} else if event.Key() == bind.Key.Code {
+		} else if event.Key() == bind.Key.Code && event.Modifiers() == bind.Key.Mod {
 			return bind.Cmd
 		}
 	}

@@ -84,7 +84,7 @@ var (
 	}
 	AppExitKey = uiKeyInfo{
 		Key:      tcell.KeyCtrlC,
-		KeyLabel: "Ctrl+c",
+		KeyLabel: "Ctrl+q",
 		KeyDesc:  "exit application",
 	}
 	HelpScreenKey = uiKeyInfo{
