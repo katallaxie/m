@@ -39,7 +39,10 @@ var Keymaps = KeymapSystem{
 	Groups: map[string]Map{
 		HomeGroup: {
 			Bind{Key: Key{Code: tcell.KeyF1, Mod: tcell.ModNone}, Cmd: cmd.HelpPopup, Description: "Help"},
+			Bind{Key: Key{Code: tcell.KeyF2, Mod: tcell.ModNone}, Cmd: cmd.NewNotebook, Description: "New Notebook"},
 			Bind{Key: Key{Code: tcell.KeyCtrlQ, Mod: tcell.ModCtrl}, Cmd: cmd.Quit, Description: "Quit"},
+			Bind{Key: Key{Code: tcell.KeyCtrlP, Mod: tcell.ModCtrl}, Cmd: cmd.FocusPrompt, Description: "Focus prompt"},
+			Bind{Key: Key{Code: tcell.KeyCtrlC, Mod: tcell.ModCtrl}, Cmd: cmd.FocusChat, Description: "Focus chat"},
 		},
 		HelpGroup: {
 			Bind{Key: Key{Code: tcell.KeyEsc}, Cmd: cmd.Close, Description: "Close"},

@@ -1,19 +1,34 @@
 package store
 
-import "github.com/katallaxie/pkg/redux"
+import (
+	"github.com/google/uuid"
+	"github.com/katallaxie/m/internal/model"
+	"github.com/katallaxie/pkg/redux"
+)
 
 // Actions ...
 const (
 	AddMessage redux.ActionType = iota
+	AddNotebook
 	SetStatus
 )
 
+// AddNotebookPayload ...
+type AddNotebookPayload struct {
+	Notebook model.Notebook
+}
+
+// NewAddNotebook returns a new action.
+func NewAddNotebook(notebook model.Notebook) redux.Action {
+	return redux.NewAction(AddNotebook, AddNotebookPayload{
+		Notebook: notebook,
+	})
+}
+
 // AddMessagePayload ...
 type AddMessagePayload struct {
-	// ID ...
-	ID string
-	// Message ...
-	Message string
+	NotebookID uuid.UUID
+	Message    model.Message
 }
 
 // NewSetStatus returns a new action.
@@ -22,7 +37,7 @@ func NewSetStatus(status int) redux.Action {
 }
 
 // NewAddMessage returns a new action.
-func NewAddMessage(message string) redux.Action {
+func NewAddMessage(notebookId uuid.UUID, message model.Message) redux.Action {
 	return redux.NewAction(AddMessage, AddMessagePayload{
 		Message: message,
 	})

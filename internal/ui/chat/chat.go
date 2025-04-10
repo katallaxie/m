@@ -18,7 +18,7 @@ type Chat struct {
 func NewChat(app ui.Application[store.State], appName string, appVersion string) *Chat {
 	chat := &Chat{
 		TextView: tview.NewTextView(),
-		title:    "💬 Chat",
+		title:    " 💬 Chat ",
 	}
 
 	chat.SetTitle(chat.title)

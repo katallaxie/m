@@ -1,6 +1,20 @@
 package store
 
-import "github.com/katallaxie/pkg/redux"
+import (
+	"github.com/katallaxie/pkg/redux"
+)
+
+// AddNotebookReducer ...
+func AddNotebookReducer(prev State, action redux.Action) State {
+	if action.Type() != AddNotebook {
+		return prev
+	}
+
+	payload := action.Payload().(AddNotebookPayload)
+	prev.Notebooks[payload.Notebook.ID] = payload.Notebook
+
+	return prev
+}
 
 // AddMessageReducer ...
 func AddMessageReducer(prev State, action redux.Action) State {
@@ -9,7 +23,8 @@ func AddMessageReducer(prev State, action redux.Action) State {
 	}
 
 	payload := action.Payload().(AddMessagePayload)
-	prev.Messages = append(prev.Messages, payload.Message)
+	notebook := prev.Notebooks[payload.NotebookID]
+	notebook.AddMessages(payload.Message)
 
 	return prev
 }

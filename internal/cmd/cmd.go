@@ -69,6 +69,11 @@ const (
 	UnfocusSidebar
 	ToggleSidebar
 	Close
+	FocusPrompt
+	FocusChat
+
+	// Notebook
+	NewNotebook
 
 	// Connection
 	NewConnection

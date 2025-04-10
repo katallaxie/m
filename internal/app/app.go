@@ -9,6 +9,7 @@ import (
 	"github.com/katallaxie/m/internal/config"
 	"github.com/katallaxie/m/internal/entity"
 	"github.com/katallaxie/m/internal/keymap"
+	"github.com/katallaxie/m/internal/model"
 	"github.com/katallaxie/m/internal/store"
 	"github.com/katallaxie/m/internal/ui/activity"
 	"github.com/katallaxie/m/internal/ui/chat"
@@ -26,17 +27,17 @@ import (
 type App struct {
 	*tview.Application
 
-	theme       *entity.Theme
-	winMan      *winman.Manager
-	currentPage string
-	pages       *tview.Pages
-	menu        *tview.TextView
-	chat        *chat.Chat
-	infoBar     *infobar.InfoBar
-	config      *config.Config
-	state       redux.Store[store.State]
-	api         *api.Api
-	ctx         context.Context
+	theme   *entity.Theme
+	winMan  *winman.Manager
+	pages   *tview.Pages
+	menu    *tview.TextView
+	chat    *chat.Chat
+	prompt  *chat.Prompt
+	infoBar *infobar.InfoBar
+	config  *config.Config
+	state   redux.Store[store.State]
+	api     *api.Api
+	ctx     context.Context
 }
 
 // New returns a new application.
@@ -58,26 +59,29 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 	}
 
 	// State machine
-	app.state = redux.New(store.NewState(), store.AddMessageReducer, store.SetStatusReducer)
+	app.state = redux.New(store.NewState(), store.AddMessageReducer, store.SetStatusReducer, store.AddNotebookReducer)
 
 	// Chat panel
 	app.chat = chat.NewChat(app, "M", "0.1.0")
 
+	// Prompt panel
+	app.prompt = chat.NewPrompt(app, app.api)
+
 	// menu items
 	menuItems := [][]string{
 		{utils.HelpScreenKey.Label(), "Help"},
-		{utils.ChatScreenKey.Label(), app.chat.GetTitle()},
+		{utils.NewNotebookKey.Label(), "New Notebook"},
 		{utils.AppExitKey.Label(), "Quit"},
 	}
 	app.menu = newMenu(menuItems)
 
 	sidebarPanel := tview.NewFlex().SetDirection(tview.FlexRow).
-		AddItem(chat.NewNotebookList(), 0, 1, true).
+		AddItem(chat.NewNotebookList(app), 0, 1, true).
 		AddItem(activity.NewActivity(app), 3, 0, false)
 
 	mainPanel := tview.NewFlex().SetDirection(tview.FlexRow).
 		AddItem(app.chat, 0, 3, false).
-		AddItem(chat.NewPrompt(app, app.api), 0, 1, true)
+		AddItem(app.prompt, 0, 1, true)
 
 	mainLayout := tview.NewFlex().SetDirection(tview.FlexColumn).
 		AddItem(sidebarPanel, 35, 1, false).
@@ -112,6 +116,14 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 
 		if command == cmd.Quit {
 			app.pages.ShowPage("Quit")
+		}
+
+		if command == cmd.FocusPrompt {
+			app.SetFocus(app.prompt)
+		}
+
+		if command == cmd.NewNotebook {
+			app.GetStore().Dispatch(store.NewAddNotebook(model.NewNotebook()))
 		}
 
 		return event

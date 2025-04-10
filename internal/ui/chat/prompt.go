@@ -10,16 +10,7 @@ import (
 	"github.com/rivo/tview"
 )
 
-const (
-	example = `Write a concise summary of the following in less then 20 words:
-	
-	"Artificial intelligence (AI) is technology that enables computers and machines to simulate human learning, comprehension, problem solving, decision making, creativity and autonomy."
-	
-	CONCISE SUMMARY:`
-)
-
-const defaultPrompt = "🐶 >"
-
+// PromptState holds the state of the prompt.
 type PromptState struct {
 	isFocused bool
 }
@@ -43,7 +34,7 @@ func NewPrompt(app ui.Application[store.State], api *api.Api) *Prompt {
 		api: api,
 	}
 
-	prompt.SetTitle(" ✍️ Prompt ")
+	prompt.SetTitle(" ✍️ Prompt ctrl-p ")
 	prompt.SetBorder(true)
 	prompt.SetWordWrap(true)
 	prompt.SetWrap(true)
@@ -67,7 +58,7 @@ func (p *Prompt) onEnter(prompt string) {
 		p.app.GetStore().Dispatch(store.NewSetStatus(store.Loading))
 
 		fn := func(res *prompts.ChatCompletionResponse) error {
-			p.app.GetStore().Dispatch(store.NewAddMessage(res.String()))
+			p.app.GetStore().Dispatch()
 
 			return nil
 		}

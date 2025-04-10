@@ -4,17 +4,20 @@ import (
 	"fmt"
 
 	"github.com/gdamore/tcell/v2"
+	"github.com/katallaxie/m/internal/store"
+	"github.com/katallaxie/m/internal/ui"
 	"github.com/rivo/tview"
 )
 
 // NotebookList is a list of notebooks.
-type NotebookList struct {
+type NotebookList[S store.State] struct {
+	app ui.Application[S]
 	*tview.TreeView
 }
 
 // NewNotebookList returns a new notebook list.
-func NewNotebookList() *NotebookList {
-	notebookList := &NotebookList{
+func NewNotebookList[S store.State](app ui.Application[store.State]) *NotebookList[S] {
+	notebookList := &NotebookList[S]{
 		TreeView: tview.NewTreeView(),
 	}
 
@@ -32,6 +35,23 @@ func NewNotebookList() *NotebookList {
 
 		return event
 	})
+
+	sub := app.GetStore().Subscribe()
+
+	go func() {
+		for change := range sub {
+			treeRoot := tview.NewTreeNode("📚 Library")
+
+			for _, notebook := range change.Curr().Notebooks {
+				tview.NewTreeNode(notebook.Name).
+					SetReference(notebook.ID).
+					SetSelectable(true)
+				treeRoot.AddChild(tview.NewTreeNode(notebook.Name))
+			}
+
+			notebookList.SetRoot(treeRoot)
+		}
+	}()
 
 	return notebookList
 }
