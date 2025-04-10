@@ -40,16 +40,19 @@ func NewNotebookList[S store.State](app ui.Application[store.State]) *NotebookLi
 
 	go func() {
 		for change := range sub {
-			treeRoot := tview.NewTreeNode("📚 Library")
+			app.QueueUpdateDraw(func() {
+				treeRoot := tview.NewTreeNode("📚 Library")
 
-			for _, notebook := range change.Curr().Notebooks {
-				tview.NewTreeNode(notebook.Name).
-					SetReference(notebook.ID).
-					SetSelectable(true)
-				treeRoot.AddChild(tview.NewTreeNode(notebook.Name))
-			}
+				for _, notebook := range change.Curr().Notebooks {
+					node := tview.NewTreeNode(notebook.Name).
+						SetReference(notebook.ID).
+						SetColor(tcell.ColorLightCoral).
+						SetSelectable(true)
+					treeRoot.AddChild(node)
+				}
 
-			notebookList.SetRoot(treeRoot)
+				notebookList.SetRoot(treeRoot)
+			})
 		}
 	}()
 

@@ -32,3 +32,14 @@ func NewNotebook() Notebook {
 func (n *Notebook) AddMessages(messages ...Message) {
 	n.Messages = slices.Append(n.Messages, messages...)
 }
+
+// UpdateMessages updates the messages in the notebook.
+func (n *Notebook) UpdateMessages(messages ...Message) {
+	for i := range messages {
+		for j := range n.Messages {
+			if n.Messages[j].ID() == messages[i].ID() {
+				n.Messages[j] = messages[i]
+			}
+		}
+	}
+}

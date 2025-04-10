@@ -1,8 +1,6 @@
 package chat
 
 import (
-	"strings"
-
 	"github.com/katallaxie/m/internal/store"
 	"github.com/katallaxie/m/internal/ui"
 	"github.com/rivo/tview"
@@ -27,11 +25,11 @@ func NewChat(app ui.Application[store.State], appName string, appVersion string)
 	go func() {
 		store := app.GetStore()
 
-		for s := range store.Subscribe() {
-			app.QueueUpdateDraw(func() {
-				chat.SetText(strings.Join(s.Curr().Messages, ""))
-				chat.ScrollToEnd()
-			})
+		for _ = range store.Subscribe() {
+			// app.QueueUpdateDraw(func() {
+			// 	chat.SetText(strings.Join(s.Curr().Messages, ""))
+			// 	chat.ScrollToEnd()
+			// })
 		}
 	}()
 

@@ -59,7 +59,13 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 	}
 
 	// State machine
-	app.state = redux.New(store.NewState(), store.AddMessageReducer, store.SetStatusReducer, store.AddNotebookReducer)
+	app.state = redux.New(
+		store.NewState(),
+		store.AddMessageReducer,
+		store.UpdateMessageReducer,
+		store.SetStatusReducer,
+		store.AddNotebookReducer,
+	)
 
 	// Chat panel
 	app.chat = chat.NewChat(app, "M", "0.1.0")

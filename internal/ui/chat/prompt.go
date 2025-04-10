@@ -39,7 +39,7 @@ func NewPrompt(app ui.Application[store.State], api *api.Api) *Prompt {
 	prompt.SetWordWrap(true)
 	prompt.SetWrap(true)
 	prompt.SetBorderPadding(1, 1, 1, 1)
-	prompt.SetPlaceholder("Enter your message here...")
+	prompt.SetPlaceholder("Ask anything ...")
 	prompt.SetInputCapture(prompt.onInputCapture)
 
 	prompt.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
@@ -56,9 +56,10 @@ func NewPrompt(app ui.Application[store.State], api *api.Api) *Prompt {
 func (p *Prompt) onEnter(prompt string) {
 	go func() {
 		p.app.GetStore().Dispatch(store.NewSetStatus(store.Loading))
+		// notebook := p.app.GetStore().State().Notebooks
 
 		fn := func(res *prompts.ChatCompletionResponse) error {
-			p.app.GetStore().Dispatch()
+			// p.app.GetStore().Dispatch(store.NewSetStatus(notebook.ID(), res))
 
 			return nil
 		}

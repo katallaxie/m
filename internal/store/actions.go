@@ -9,6 +9,8 @@ import (
 // Actions ...
 const (
 	AddMessage redux.ActionType = iota
+	UpdateMessage
+	DeleteMessage
 	AddNotebook
 	SetStatus
 )
@@ -29,6 +31,20 @@ func NewAddNotebook(notebook model.Notebook) redux.Action {
 type AddMessagePayload struct {
 	NotebookID uuid.UUID
 	Message    model.Message
+}
+
+// UpdateMessagePayload ...
+type UpdateMessagePayload struct {
+	NotebookID uuid.UUID
+	Message    model.Message
+}
+
+// NewUpdateMessage returns a new action.
+func NewUpdateMessage(notebookId uuid.UUID, message model.Message) redux.Action {
+	return redux.NewAction(UpdateMessage, UpdateMessagePayload{
+		NotebookID: notebookId,
+		Message:    message,
+	})
 }
 
 // NewSetStatus returns a new action.
