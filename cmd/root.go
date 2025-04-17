@@ -6,8 +6,10 @@ import (
 
 	"github.com/katallaxie/m/internal/config"
 	"github.com/katallaxie/m/internal/ui"
+	"github.com/muesli/termenv"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/log"
 	"github.com/spf13/cobra"
 )
@@ -47,6 +49,9 @@ var RootCmd = &cobra.Command{
 }
 
 func runRoot(ctx context.Context, args ...string) error {
+	// see https://github.com/charmbracelet/lipgloss/issues/73
+	lipgloss.SetHasDarkBackground(termenv.HasDarkBackground())
+
 	f, err := tea.LogToFile(defaultLogFile, "")
 	if err != nil {
 		return err
@@ -75,16 +80,12 @@ func runRoot(ctx context.Context, args ...string) error {
 		// enable mouse motion will make text not able to select
 		// tea.WithMouseCellMotion(),
 		tea.WithAltScreen(),
+		tea.WithReportFocus(),
 	)
-
-	// err = app.New(ctx, "M", version, cfg).Run()
-	// if err != nil {
-	// 	return err
-	// }
 
 	_, err = p.Run()
 	if err != nil {
-		return err
+		log.Fatal("failed to run program", err)
 	}
 
 	return nil

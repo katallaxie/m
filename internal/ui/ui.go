@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -59,10 +60,13 @@ func (m Model) Init() tea.Cmd {
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
+		if key.Matches(msg, m.keys.Quit) {
+			return m, tea.Quit
+		}
 	case tea.WindowSizeMsg:
 		m.onWindowSizeChanged(msg)
 	case initMsg:
-		log.Debug("initMsg", "config", msg.Config)
+		log.Debug("initMsg", "config")
 		m.syncMainContentWidth()
 	}
 
@@ -73,10 +77,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 // View returns the view of the model.
 func (m Model) View() string {
-	if m.width == 0 || m.height == 0 {
-		return "Initializing..."
-	}
-
 	return lipgloss.JoinVertical(
 		lipgloss.Left,
 		m.footer.View(),
