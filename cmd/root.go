@@ -8,6 +8,7 @@ import (
 	"github.com/katallaxie/m/internal/ui"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/log"
 	"github.com/spf13/cobra"
 )
 
@@ -51,6 +52,10 @@ func runRoot(ctx context.Context, args ...string) error {
 		return err
 	}
 	defer f.Close()
+
+	log.SetOutput(f)
+	log.SetReportCaller(true)
+	log.SetLevel(log.DebugLevel)
 
 	err = cfg.LoadSpec()
 	if err != nil {

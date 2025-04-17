@@ -1,0 +1,1 @@
+2025/04/17 19:32:18 DEBU <ui/ui.go:65> initMsg config="{Stdin:<nil> Stdout:<nil> Stderr:<nil> Spec:<nil> Flags:<nil> RWMutex:{w:{_:{} mu:{state:0 sema:0}} writerSem:0 readerSem:0 readerCount:{_:{} v:0} readerWait:{_:{} v:0}}}"
