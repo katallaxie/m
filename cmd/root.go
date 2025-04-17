@@ -4,16 +4,18 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/katallaxie/m/internal/app"
 	"github.com/katallaxie/m/internal/config"
+	"github.com/katallaxie/m/internal/ui"
 
+	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 )
 
 var cfg = config.Default()
 
 const (
-	versionFmt = "%s (%s %s)"
+	defaultLogFile = "m.log"
+	versionFmt     = "%s (%s %s)"
 )
 
 var (
@@ -30,7 +32,7 @@ func init() {
 	RootCmd.PersistentFlags().BoolVarP(&cfg.Flags.Verbose, "verbose", "v", cfg.Flags.Verbose, "verbose output")
 	RootCmd.PersistentFlags().StringVarP(&cfg.Flags.Model, "model", "m", cfg.Flags.Model, "model to use (default: smollm)")
 
-	RootCmd.SilenceErrors = true
+	// RootCmd.SilenceErrors = true
 	RootCmd.SilenceUsage = true
 }
 
@@ -44,7 +46,13 @@ var RootCmd = &cobra.Command{
 }
 
 func runRoot(ctx context.Context, args ...string) error {
-	err := cfg.LoadSpec()
+	f, err := tea.LogToFile(defaultLogFile, "")
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	err = cfg.LoadSpec()
 	if err != nil {
 		return err
 	}
@@ -57,7 +65,19 @@ func runRoot(ctx context.Context, args ...string) error {
 		return err
 	}
 
-	err = app.New(ctx, "M", version, cfg).Run()
+	p := tea.NewProgram(
+		ui.New(),
+		// enable mouse motion will make text not able to select
+		// tea.WithMouseCellMotion(),
+		tea.WithAltScreen(),
+	)
+
+	// err = app.New(ctx, "M", version, cfg).Run()
+	// if err != nil {
+	// 	return err
+	// }
+
+	_, err = p.Run()
 	if err != nil {
 		return err
 	}

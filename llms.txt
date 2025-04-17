@@ -1,0 +1,13 @@
+# HTMX for Fiber
+HTMX for Fiber is a lightway package that allows to create HTML and HTMX applications in pure Go.
+HTMX for Fiber provides primitives to create HTMX applications in Go, including:
+- HTMX middleware
+- HTMX request and response helpers
+- HTMX event handlers
+- [DaisyUI](http://daisyui.com) components
+- [Heroicons](https://heroicons.com/) components
+
+[docs](https://pkg.go.dev/github.com/katallaxie/fiber-htmx)
+
+## HTMX for Fiber install notes
+1. `go get github.com/katallaxie/fiber-htmx` will install the package.
