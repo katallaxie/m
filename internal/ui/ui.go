@@ -3,6 +3,7 @@ package ui
 import (
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/spinner"
+	"github.com/charmbracelet/bubbles/textarea"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/log"
@@ -35,6 +36,7 @@ type Model struct {
 	footer     footer.Model
 	spinner    spinner.Model
 	keys       *keys.KeyMap
+	textarea   textarea.Model
 	ctx        *context.ProgramContext
 }
 
@@ -45,6 +47,21 @@ func New() Model {
 	m.spinner = spinner.Model{Spinner: spinner.Dot}
 	m.footer = footer.NewModel(m.ctx)
 	m.keys = keys.Keys
+
+	ta := textarea.New()
+	ta.Placeholder = "Send a message..."
+	ta.Focus()
+
+	ta.Prompt = "┃ "
+	ta.CharLimit = -1
+	ta.SetWidth(50)
+	ta.SetHeight(1)
+
+	m.textarea = ta
+
+	// Remove cursor line styling
+	ta.FocusedStyle.CursorLine = lipgloss.NewStyle()
+	ta.ShowLineNumbers = false
 
 	m.ctx = &context.ProgramContext{}
 
@@ -79,6 +96,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m Model) View() string {
 	return lipgloss.JoinVertical(
 		lipgloss.Left,
+		m.textarea.View(),
 		m.footer.View(),
 	)
 }
@@ -92,6 +110,7 @@ func (m Model) onWindowSizeChanged(msg tea.WindowSizeMsg) {
 	m.ctx.ScreenWidth = msg.Width
 	m.ctx.ScreenHeight = msg.Height
 	m.ctx.MainContentHeight = msg.Height - TabsHeight - FooterHeight
+	m.textarea.SetWidth(msg.Width)
 
 	m.syncMainContentWidth()
 }
