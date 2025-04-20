@@ -59,3 +59,7 @@ func (m Model) View() string {
 func (m *Model) SetWidth(width int) {
 	m.help.Width = width
 }
+
+func (m *Model) UpdateProgramContext(ctx *context.ProgramContext) {
+	m.ctx = ctx
+}

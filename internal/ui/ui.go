@@ -3,13 +3,13 @@ package ui
 import (
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/spinner"
-	"github.com/charmbracelet/bubbles/textarea"
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/log"
 	"github.com/katallaxie/m/internal/config"
 	"github.com/katallaxie/m/internal/ui/components/footer"
+	"github.com/katallaxie/m/internal/ui/components/prompt"
 	"github.com/katallaxie/m/internal/ui/context"
 	"github.com/katallaxie/m/internal/ui/keys"
 )
@@ -37,7 +37,7 @@ type Model struct {
 	footer     footer.Model
 	spinner    spinner.Model
 	keys       *keys.KeyMap
-	textarea   textarea.Model
+	prompt     prompt.Model
 	vp         viewport.Model
 	ctx        *context.ProgramContext
 }
@@ -50,24 +50,11 @@ func New() Model {
 	m.footer = footer.NewModel(m.ctx)
 	m.keys = keys.Keys
 
-	ta := textarea.New()
-	ta.Placeholder = "Send a message..."
-	ta.Focus()
-
-	ta.Prompt = "┃ "
-	ta.CharLimit = -1
-	ta.SetWidth(30)
-	ta.SetHeight(3)
-
-	// Remove cursor line styling
-	ta.FocusedStyle.CursorLine = lipgloss.NewStyle()
-	ta.ShowLineNumbers = false
-	m.textarea = ta
+	p := prompt.NewModel(m.ctx)
+	m.prompt = p
 
 	vp := viewport.New(30, 5)
 	m.vp = vp
-
-	ta.KeyMap.InsertNewline.SetEnabled(false)
 
 	m.ctx = &context.ProgramContext{}
 
@@ -86,7 +73,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		vpCmd tea.Cmd
 	)
 
-	m.textarea, tiCmd = m.textarea.Update(msg)
+	m.prompt, tiCmd = m.prompt.Update(msg)
 	m.vp, vpCmd = m.vp.Update(msg)
 
 	switch msg := msg.(type) {
@@ -111,7 +98,7 @@ func (m Model) View() string {
 	return lipgloss.JoinVertical(
 		lipgloss.Left,
 		m.vp.View(),
-		m.textarea.View(),
+		m.prompt.View(),
 		m.footer.View(),
 	)
 }
@@ -125,7 +112,7 @@ func (m Model) onWindowSizeChanged(msg tea.WindowSizeMsg) {
 	m.ctx.ScreenWidth = msg.Width
 	m.ctx.ScreenHeight = msg.Height
 	m.ctx.MainContentHeight = msg.Height - TabsHeight - FooterHeight
-	m.textarea.SetWidth(msg.Width)
+	m.prompt.SetWidth(msg.Width)
 
 	m.syncMainContentWidth()
 }
