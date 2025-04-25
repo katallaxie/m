@@ -5,8 +5,8 @@ import (
 	"github.com/charmbracelet/bubbles/spinner"
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/glamour"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/charmbracelet/log"
 	"github.com/katallaxie/m/internal/config"
 	"github.com/katallaxie/m/internal/ui/components/footer"
 	"github.com/katallaxie/m/internal/ui/components/prompt"
@@ -40,6 +40,7 @@ type Model struct {
 	prompt     prompt.Model
 	vp         viewport.Model
 	ctx        *context.ProgramContext
+	renderer   *glamour.TermRenderer
 }
 
 // New creates a new model.
@@ -53,8 +54,16 @@ func New() Model {
 	p := prompt.NewModel(m.ctx)
 	m.prompt = p
 
-	vp := viewport.New(30, 5)
+	vp := viewport.New(50, 5)
+	vp.SetContent("Hello World")
 	m.vp = vp
+
+	renderer, _ := glamour.NewTermRenderer(
+		glamour.WithEnvironmentConfig(),
+		glamour.WithWordWrap(0), // we do hard-wrapping ourselves
+	)
+	m.renderer = renderer
+	m = m.SetInputMode(keys.InputModelMultiLine)
 
 	m.ctx = &context.ProgramContext{}
 
@@ -84,7 +93,6 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		m.onWindowSizeChanged(msg)
 	case initMsg:
-		log.Debug("initMsg", "config")
 		m.syncMainContentWidth()
 	}
 
@@ -103,15 +111,23 @@ func (m Model) View() string {
 	)
 }
 
+func (m Model) SetInputMode(mode keys.InputMode) Model {
+	return m
+}
+
 func (m *Model) initScreen() tea.Msg {
 	return initMsg{}
 }
 
 func (m Model) onWindowSizeChanged(msg tea.WindowSizeMsg) {
-	m.footer.SetWidth(msg.Width)
+	m.footer.SetWidth(msg.Height)
 	m.ctx.ScreenWidth = msg.Width
 	m.ctx.ScreenHeight = msg.Height
 	m.ctx.MainContentHeight = msg.Height - TabsHeight - FooterHeight
+	m.vp.Width = msg.Width
+	m.vp.Height = msg.Height - m.prompt.Height() - lipgloss.Height(m.footer.View())
+	m.vp.SetContent("Hello World")
+	m.vp.GotoBottom()
 	m.prompt.SetWidth(msg.Width)
 
 	m.syncMainContentWidth()

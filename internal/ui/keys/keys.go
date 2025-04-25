@@ -10,6 +10,13 @@ import (
 	log "github.com/charmbracelet/log"
 )
 
+type InputMode int
+
+const (
+	InputModelSingleLine InputMode = iota
+	InputModelMultiLine
+)
+
 type KeyMap struct {
 	viewType    config.ViewType
 	Up          key.Binding

@@ -46,6 +46,16 @@ func (m Model) View() string {
 	return m.ta.View()
 }
 
+// Height returns the height of the model.
+func (m Model) Height() int {
+	return m.ta.Height()
+}
+
+// Width returns the width of the model.
+func (m Model) Width() int {
+	return m.ta.Width()
+}
+
 func (m *Model) SetWidth(width int) {
 	m.ta.SetWidth(width)
 }
