@@ -55,7 +55,6 @@ func New() Model {
 	m.prompt = p
 
 	vp := viewport.New(50, 5)
-	vp.SetContent("Hello World")
 	m.vp = vp
 
 	renderer, _ := glamour.NewTermRenderer(
@@ -119,15 +118,13 @@ func (m *Model) initScreen() tea.Msg {
 	return initMsg{}
 }
 
-func (m Model) onWindowSizeChanged(msg tea.WindowSizeMsg) {
+func (m *Model) onWindowSizeChanged(msg tea.WindowSizeMsg) {
 	m.footer.SetWidth(msg.Height)
 	m.ctx.ScreenWidth = msg.Width
 	m.ctx.ScreenHeight = msg.Height
 	m.ctx.MainContentHeight = msg.Height - TabsHeight - FooterHeight
 	m.vp.Width = msg.Width
 	m.vp.Height = msg.Height - m.prompt.Height() - lipgloss.Height(m.footer.View())
-	m.vp.SetContent("Hello World")
-	m.vp.GotoBottom()
 	m.prompt.SetWidth(msg.Width)
 
 	m.syncMainContentWidth()
