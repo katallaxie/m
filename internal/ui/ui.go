@@ -35,7 +35,6 @@ type Model struct {
 	answering  bool
 	err        error
 	footer     footer.Model
-	spinner    spinner.Model
 	keys       *keys.KeyMap
 	prompt     prompt.Model
 	vp         viewport.Model
@@ -47,7 +46,6 @@ type Model struct {
 func New() Model {
 	m := Model{}
 
-	m.spinner = spinner.Model{Spinner: spinner.Dot}
 	m.footer = footer.NewModel(m.ctx)
 	m.keys = keys.Keys
 
@@ -77,17 +75,28 @@ func (m Model) Init() tea.Cmd {
 // Update updates the model with the given message.
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var (
-		tiCmd tea.Cmd
-		vpCmd tea.Cmd
+		cmd  tea.Cmd
+		cmds []tea.Cmd
 	)
 
-	m.prompt, tiCmd = m.prompt.Update(msg)
-	m.vp, vpCmd = m.vp.Update(msg)
+	m.prompt, cmd = m.prompt.Update(msg)
+	cmds = append(cmds, cmd)
+
+	m.vp, cmd = m.vp.Update(msg)
+	cmds = append(cmds, cmd)
 
 	switch msg := msg.(type) {
+	case spinner.TickMsg:
+		m.footer, cmd = m.footer.Update(msg)
+		cmds = append(cmds, cmd)
 	case tea.KeyMsg:
 		if key.Matches(msg, m.keys.Quit) {
 			return m, tea.Quit
+		}
+
+		if key.Matches(msg, m.keys.Submit) {
+			m.footer, cmd = m.footer.Update(msg)
+			cmds = append(cmds, cmd)
 		}
 	case tea.WindowSizeMsg:
 		m.onWindowSizeChanged(msg)
@@ -97,7 +106,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	m.syncProgramContext()
 
-	return m, tea.Batch(tiCmd, vpCmd)
+	return m, tea.Batch(cmds...)
 }
 
 // View returns the view of the model.

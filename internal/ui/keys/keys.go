@@ -29,6 +29,7 @@ type KeyMap struct {
 	PrevSection key.Binding
 	Help        key.Binding
 	Quit        key.Binding
+	Submit      key.Binding
 }
 
 func CreateKeyMapForView(viewType config.ViewType) help.KeyMap {
@@ -121,6 +122,10 @@ var Keys = &KeyMap{
 	Help: key.NewBinding(
 		key.WithKeys("?"),
 		key.WithHelp("?", "help"),
+	),
+	Submit: key.NewBinding(
+		key.WithKeys("enter"),
+		key.WithHelp("enter", "submit"),
 	),
 	Quit: key.NewBinding(
 		key.WithKeys("q", "esc", "ctrl+c"),
