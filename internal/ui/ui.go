@@ -1,15 +1,19 @@
 package ui
 
 import (
+	"fmt"
+
 	"github.com/katallaxie/m/internal/config"
+	"github.com/katallaxie/m/internal/ui/components/chat"
 	"github.com/katallaxie/m/internal/ui/components/footer"
 	"github.com/katallaxie/m/internal/ui/components/prompt"
 	pctx "github.com/katallaxie/m/internal/ui/context"
 	"github.com/katallaxie/m/internal/ui/keys"
+	"github.com/katallaxie/prompts"
+	"github.com/katallaxie/prompts/ollama"
 
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/spinner"
-	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/glamour"
 	"github.com/charmbracelet/lipgloss"
@@ -39,7 +43,7 @@ type Model struct {
 	keys       *keys.KeyMap
 	prompt     prompt.Model
 	renderer   *glamour.TermRenderer
-	vp         viewport.Model
+	chat       chat.Model
 	width      int
 }
 
@@ -54,14 +58,10 @@ func New(ctx *pctx.ProgramContext) Model {
 	p := prompt.NewModel(m.ctx)
 	m.prompt = p
 
-	vp := viewport.New(50, 5)
-	m.vp = vp
+	m.ctx.Chats.Next()
+	chat := chat.NewModel(m.ctx)
+	m.chat = chat
 
-	renderer, _ := glamour.NewTermRenderer(
-		glamour.WithEnvironmentConfig(),
-		glamour.WithWordWrap(0), // we do hard-wrapping ourselves
-	)
-	m.renderer = renderer
 	m = m.SetInputMode(keys.InputModelMultiLine)
 
 	return m
@@ -79,15 +79,42 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		cmds []tea.Cmd
 	)
 
-	m.prompt, cmd = m.prompt.Update(msg)
-	cmds = append(cmds, cmd)
-
-	m.vp, cmd = m.vp.Update(msg)
-	cmds = append(cmds, cmd)
-
 	switch msg := msg.(type) {
 	case spinner.TickMsg:
 		m.footer, cmd = m.footer.Update(msg)
+		cmds = append(cmds, cmd)
+	// case pctx.AnswerMsg:
+	// 	fmt.Println(msg.Content)
+	case pctx.PromptMsg:
+		curr := m.ctx.Chats.Current()
+		curr.AddMessages(msg.Messages...)
+
+		cmd = func() tea.Msg {
+			client := ollama.New()
+			msgs := []prompts.ChatCompletionMessage{}
+
+			for _, m := range msg.Messages {
+				msgs = append(msgs, prompts.ChatCompletionMessage{
+					Role:    prompts.Role(m.Role()),
+					Content: m.Content(),
+				})
+			}
+
+			req := prompts.NewStreamChatCompletionRequest()
+			req.SetModel(ollama.DefaultModel)
+			req.AddMessages(msgs...)
+
+			_ = client.SendStreamCompletionRequest(m.ctx.Context(), req, func(res *prompts.ChatCompletionResponse) error {
+				m.ctx.Send(pctx.AnswerMsg{
+					Content: fmt.Sprint(res),
+				})
+
+				return nil
+			})
+
+			return nil
+		}
+
 		cmds = append(cmds, cmd)
 	case tea.KeyMsg:
 		if key.Matches(msg, m.keys.Quit) {
@@ -107,6 +134,12 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	// synchronize the program context before updating the view
 	m.syncProgramContext()
 
+	m.prompt, cmd = m.prompt.Update(msg)
+	cmds = append(cmds, cmd)
+
+	m.chat, cmd = m.chat.Update(msg)
+	cmds = append(cmds, cmd)
+
 	return m, tea.Batch(cmds...)
 }
 
@@ -114,7 +147,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m Model) View() string {
 	return lipgloss.JoinVertical(
 		lipgloss.Left,
-		m.vp.View(),
+		m.chat.View(),
 		m.prompt.View(),
 		m.footer.View(),
 	)
@@ -129,13 +162,13 @@ func (m *Model) initScreen() tea.Msg {
 }
 
 func (m *Model) onWindowSizeChanged(msg tea.WindowSizeMsg) {
-	m.footer.SetWidth(msg.Height)
 	m.ctx.ScreenWidth = msg.Width
 	m.ctx.ScreenHeight = msg.Height
 	m.ctx.MainContentHeight = msg.Height - TabsHeight - FooterHeight
-	m.vp.Width = msg.Width
-	m.vp.Height = msg.Height - m.prompt.Height() - lipgloss.Height(m.footer.View())
+	m.footer.SetWidth(msg.Height)
 	m.prompt.SetWidth(msg.Width)
+	m.chat.SetWidth(msg.Width)
+	m.chat.SetHeight(msg.Height - m.prompt.Height() - lipgloss.Height(m.footer.View()))
 
 	m.syncMainContentWidth()
 }

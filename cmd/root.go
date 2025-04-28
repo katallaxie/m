@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/katallaxie/m/internal/config"
+	"github.com/katallaxie/m/internal/models"
 	"github.com/katallaxie/m/internal/ui"
 	pctx "github.com/katallaxie/m/internal/ui/context"
 
@@ -77,6 +78,7 @@ func runRoot(ctx context.Context, args ...string) error {
 	}
 
 	c := pctx.WithContext(ctx)
+	c.Chats = models.NewChatManager()
 
 	p := tea.NewProgram(
 		ui.New(c),
@@ -91,7 +93,7 @@ func runRoot(ctx context.Context, args ...string) error {
 
 	_, err = p.Run()
 	if err != nil {
-		log.Fatal("failed to run program", err)
+		return err
 	}
 
 	return nil

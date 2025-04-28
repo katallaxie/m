@@ -5,9 +5,25 @@ import (
 	"time"
 
 	"github.com/katallaxie/m/internal/config"
+	"github.com/katallaxie/m/internal/models"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
+
+// AnswerMsg is a message that contains the answer to a question.
+type AnswerMsg struct {
+	Content string
+}
+
+// PromptMsg is a message that contains the prompt for a task.
+type PromptMsg struct {
+	Messages []models.Message
+}
+
+// CompletionMsg is a message that contains the completion of a task.
+type CompletionMsg struct {
+	Content string
+}
 
 // NewProgramContext creates a new ProgramContext with default values.
 func NewProgramContext() *ProgramContext {
@@ -32,8 +48,10 @@ type ProgramContext struct {
 	Version           string
 	View              config.ViewType
 	Error             error
-	program           *tea.Program
-	ctx               context.Context
+	Chats             *models.ChatManager
+
+	program *tea.Program
+	ctx     context.Context
 }
 
 // SetContext sets the context for the program.
