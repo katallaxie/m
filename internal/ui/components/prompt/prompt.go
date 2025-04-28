@@ -2,7 +2,9 @@ package prompt
 
 import (
 	"github.com/katallaxie/m/internal/ui/context"
+	"github.com/katallaxie/m/internal/ui/keys"
 
+	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/textarea"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
@@ -37,9 +39,20 @@ func NewModel(ctx *context.ProgramContext) Model {
 
 func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 	var cmd tea.Cmd
-	m.ta, cmd = m.ta.Update(msg)
+	var cmds []tea.Cmd
 
-	return m, cmd
+	switch msg := msg.(type) {
+	case tea.KeyMsg:
+		if key.Matches(msg, keys.Keys.Submit) {
+			m.ta.Reset()
+			m.ta.Placeholder = "Send a message..."
+		}
+	}
+
+	m.ta, cmd = m.ta.Update(msg)
+	cmds = append(cmds, cmd)
+
+	return m, tea.Batch(cmds...)
 }
 
 func (m Model) View() string {

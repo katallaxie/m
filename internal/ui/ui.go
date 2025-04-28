@@ -1,17 +1,18 @@
 package ui
 
 import (
+	"github.com/katallaxie/m/internal/config"
+	"github.com/katallaxie/m/internal/ui/components/footer"
+	"github.com/katallaxie/m/internal/ui/components/prompt"
+	pctx "github.com/katallaxie/m/internal/ui/context"
+	"github.com/katallaxie/m/internal/ui/keys"
+
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/spinner"
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/glamour"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/katallaxie/m/internal/config"
-	"github.com/katallaxie/m/internal/ui/components/footer"
-	"github.com/katallaxie/m/internal/ui/components/prompt"
-	"github.com/katallaxie/m/internal/ui/context"
-	"github.com/katallaxie/m/internal/ui/keys"
 )
 
 var _ tea.Model = (*Model)(nil)
@@ -29,22 +30,23 @@ const (
 
 // Model ...
 type Model struct {
-	width      int
-	height     int
-	historyIdx int
 	answering  bool
+	ctx        *pctx.ProgramContext
 	err        error
 	footer     footer.Model
+	height     int
+	historyIdx int
 	keys       *keys.KeyMap
 	prompt     prompt.Model
-	vp         viewport.Model
-	ctx        *context.ProgramContext
 	renderer   *glamour.TermRenderer
+	vp         viewport.Model
+	width      int
 }
 
 // New creates a new model.
-func New() Model {
+func New(ctx *pctx.ProgramContext) Model {
 	m := Model{}
+	m.ctx = ctx
 
 	m.footer = footer.NewModel(m.ctx)
 	m.keys = keys.Keys
@@ -61,8 +63,6 @@ func New() Model {
 	)
 	m.renderer = renderer
 	m = m.SetInputMode(keys.InputModelMultiLine)
-
-	m.ctx = &context.ProgramContext{}
 
 	return m
 }
@@ -104,6 +104,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.syncMainContentWidth()
 	}
 
+	// synchronize the program context before updating the view
 	m.syncProgramContext()
 
 	return m, tea.Batch(cmds...)
@@ -139,7 +140,10 @@ func (m *Model) onWindowSizeChanged(msg tea.WindowSizeMsg) {
 	m.syncMainContentWidth()
 }
 
-func (m *Model) syncProgramContext() {}
+func (m *Model) syncProgramContext() {
+	m.footer.UpdateProgramContext(m.ctx)
+	m.prompt.UpdateProgramContext(m.ctx)
+}
 
 func (m *Model) syncMainContentWidth() {
 	sideBarOffset := 0

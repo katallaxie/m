@@ -6,11 +6,12 @@ import (
 
 	"github.com/katallaxie/m/internal/config"
 	"github.com/katallaxie/m/internal/ui"
-	"github.com/muesli/termenv"
+	pctx "github.com/katallaxie/m/internal/ui/context"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/log"
+	"github.com/muesli/termenv"
 	"github.com/spf13/cobra"
 )
 
@@ -75,13 +76,18 @@ func runRoot(ctx context.Context, args ...string) error {
 		return err
 	}
 
+	c := pctx.WithContext(ctx)
+
 	p := tea.NewProgram(
-		ui.New(),
+		ui.New(c),
 		// enable mouse motion will make text not able to select
 		// tea.WithMouseCellMotion(),
 		tea.WithAltScreen(),
 		tea.WithReportFocus(),
 	)
+
+	// first the program needs to be initialized
+	c.SetProgram(p)
 
 	_, err = p.Run()
 	if err != nil {
