@@ -1,7 +1,6 @@
 package chat
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/katallaxie/m/internal/models"
@@ -11,6 +10,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/glamour"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/muesli/reflow/wordwrap"
 )
 
 var (
@@ -47,7 +47,18 @@ func (m Model) Update(msg tea.Msg) (Model, tea.Cmd) {
 		switch msg := msg.(type) {
 		case *models.UserMessage:
 			sb.WriteString(senderStyle.Render("You: "))
-			sb.WriteString(fmt.Sprint(msg.Content()))
+
+			content := msg.Content()
+			content = wordwrap.String(content, 50)
+			content, _ = m.renderer.Render(content)
+
+			sb.WriteString(content)
+		case *models.AIMessage:
+			sb.WriteString(senderStyle.Render("AI: "))
+			content := msg.Content()
+			content = wordwrap.String(content, 50)
+			content, _ = m.renderer.Render(content)
+			sb.WriteString(content)
 		}
 	}
 

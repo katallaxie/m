@@ -1,9 +1,8 @@
 package ui
 
 import (
-	"fmt"
-
 	"github.com/katallaxie/m/internal/config"
+	"github.com/katallaxie/m/internal/models"
 	"github.com/katallaxie/m/internal/ui/components/chat"
 	"github.com/katallaxie/m/internal/ui/components/footer"
 	"github.com/katallaxie/m/internal/ui/components/prompt"
@@ -83,11 +82,19 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case spinner.TickMsg:
 		m.footer, cmd = m.footer.Update(msg)
 		cmds = append(cmds, cmd)
-	// case pctx.AnswerMsg:
-	// 	fmt.Println(msg.Content)
+	case pctx.AnswerMsg:
+		curr := m.ctx.Chats.Current()
+		curr.UpdateMessages(msg.Messages...)
+
+		m.prompt, cmd = m.prompt.Update(msg)
+		cmds = append(cmds, cmd)
 	case pctx.PromptMsg:
 		curr := m.ctx.Chats.Current()
 		curr.AddMessages(msg.Messages...)
+
+		answer := models.NewAIMessage()
+		answer.SetContent("")
+		curr.AddMessages(answer)
 
 		cmd = func() tea.Msg {
 			client := ollama.New()
@@ -105,9 +112,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			req.AddMessages(msgs...)
 
 			_ = client.SendStreamCompletionRequest(m.ctx.Context(), req, func(res *prompts.ChatCompletionResponse) error {
-				m.ctx.Send(pctx.AnswerMsg{
-					Content: fmt.Sprint(res),
-				})
+				answer.SetContent(answer.Content() + res.String())
+				m.ctx.Send(pctx.AnswerMsg{Messages: []models.Message{answer}})
 
 				return nil
 			})
@@ -125,6 +131,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.footer, cmd = m.footer.Update(msg)
 			cmds = append(cmds, cmd)
 		}
+
+		m.prompt, cmd = m.prompt.Update(msg)
+		cmds = append(cmds, cmd)
 	case tea.WindowSizeMsg:
 		m.onWindowSizeChanged(msg)
 	case initMsg:

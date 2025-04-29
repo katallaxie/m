@@ -119,6 +119,13 @@ func (m *UserMessage) String() string {
 	return m.content
 }
 
+// NewAIMessage creates a new AI message.
+func NewAIMessage() *AIMessage {
+	return &AIMessage{
+		id: uuid.New().String(),
+	}
+}
+
 // AIMessage is an AI chat message.
 type AIMessage struct {
 	id      string
@@ -138,6 +145,12 @@ func (m *AIMessage) Role() Role {
 // Content returns the content of the message.
 func (m *AIMessage) Content() string {
 	return m.content
+}
+
+// SetContent sets the content of the message.
+func (m *AIMessage) SetContent(content string) Message {
+	m.content = content
+	return m
 }
 
 // String returns the string representation of the message.

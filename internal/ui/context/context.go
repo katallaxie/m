@@ -12,7 +12,7 @@ import (
 
 // AnswerMsg is a message that contains the answer to a question.
 type AnswerMsg struct {
-	Content string
+	Messages []models.Message
 }
 
 // PromptMsg is a message that contains the prompt for a task.

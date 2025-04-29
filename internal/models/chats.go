@@ -29,6 +29,17 @@ func (c *Chat) AddMessages(messages ...Message) {
 	c.Messages = append(c.Messages, messages...)
 }
 
+// UpdateMessages updates messages in the current chat session.
+func (c *Chat) UpdateMessages(messages ...Message) {
+	for i := range messages {
+		for j := range c.Messages {
+			if c.Messages[j].ID() == messages[i].ID() {
+				c.Messages[j] = messages[i]
+			}
+		}
+	}
+}
+
 // Current returns the current chat session.
 func (cm *ChatManager) Current() *Chat {
 	return cm.current
