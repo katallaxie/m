@@ -3,9 +3,11 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/katallaxie/m/internal/app"
 	"github.com/katallaxie/m/internal/config"
+	"github.com/katallaxie/m/internal/logs"
 
 	"github.com/spf13/cobra"
 )
@@ -56,6 +58,13 @@ func runRoot(ctx context.Context, args ...string) error {
 	if err != nil {
 		return err
 	}
+
+	_, err = logs.LogToFile("debug.log", "simple")
+	if err != nil {
+		return err
+	}
+
+	log.Print("debug log file created")
 
 	err = app.New(ctx, "M", version, cfg).Run()
 	if err != nil {
