@@ -16,7 +16,6 @@
 *.out
 dist
 tmp
-*.log
 .ollama
 
 # Dependency directories (remove the comment below to include it)

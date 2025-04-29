@@ -4,23 +4,16 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/katallaxie/m/internal/app"
 	"github.com/katallaxie/m/internal/config"
-	"github.com/katallaxie/m/internal/models"
-	"github.com/katallaxie/m/internal/ui"
-	pctx "github.com/katallaxie/m/internal/ui/context"
 
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
-	"github.com/charmbracelet/log"
-	"github.com/muesli/termenv"
 	"github.com/spf13/cobra"
 )
 
 var cfg = config.Default()
 
 const (
-	defaultLogFile = "m.log"
-	versionFmt     = "%s (%s %s)"
+	versionFmt = "%s (%s %s)"
 )
 
 var (
@@ -37,7 +30,7 @@ func init() {
 	RootCmd.PersistentFlags().BoolVarP(&cfg.Flags.Verbose, "verbose", "v", cfg.Flags.Verbose, "verbose output")
 	RootCmd.PersistentFlags().StringVarP(&cfg.Flags.Model, "model", "m", cfg.Flags.Model, "model to use (default: smollm)")
 
-	// RootCmd.SilenceErrors = true
+	RootCmd.SilenceErrors = true
 	RootCmd.SilenceUsage = true
 }
 
@@ -51,20 +44,7 @@ var RootCmd = &cobra.Command{
 }
 
 func runRoot(ctx context.Context, args ...string) error {
-	// see https://github.com/charmbracelet/lipgloss/issues/73
-	lipgloss.SetHasDarkBackground(termenv.HasDarkBackground())
-
-	f, err := tea.LogToFile(defaultLogFile, "")
-	if err != nil {
-		return err
-	}
-	defer f.Close()
-
-	log.SetOutput(f)
-	log.SetReportCaller(true)
-	log.SetLevel(log.DebugLevel)
-
-	err = cfg.LoadSpec()
+	err := cfg.LoadSpec()
 	if err != nil {
 		return err
 	}
@@ -77,21 +57,7 @@ func runRoot(ctx context.Context, args ...string) error {
 		return err
 	}
 
-	c := pctx.WithContext(ctx)
-	c.Chats = models.NewChatManager()
-
-	p := tea.NewProgram(
-		ui.New(c),
-		// enable mouse motion will make text not able to select
-		// tea.WithMouseCellMotion(),
-		tea.WithAltScreen(),
-		tea.WithReportFocus(),
-	)
-
-	// first the program needs to be initialized
-	c.SetProgram(p)
-
-	_, err = p.Run()
+	err = app.New(ctx, "M", version, cfg).Run()
 	if err != nil {
 		return err
 	}

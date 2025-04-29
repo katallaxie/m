@@ -1,10 +1,4 @@
-package models
-
-import (
-	"fmt"
-
-	"github.com/google/uuid"
-)
+package model
 
 // Role is a chat role.
 type Role string
@@ -41,8 +35,6 @@ type Message interface {
 	Role() Role
 	// Content returns the content of the message.
 	Content() string
-
-	fmt.Stringer
 }
 
 var (
@@ -75,18 +67,6 @@ func (m *HumanMessage) Role() Role {
 	return RoleHuman
 }
 
-// String returns the string representation of the message.
-func (m *HumanMessage) String() string {
-	return m.content
-}
-
-// NewUserMessage creates a new user message.
-func NewUserMessage() *UserMessage {
-	return &UserMessage{
-		id: uuid.New().String(),
-	}
-}
-
 // UserMessage is a user chat message.
 type UserMessage struct {
 	id      string
@@ -103,27 +83,9 @@ func (m *UserMessage) Content() string {
 	return m.content
 }
 
-// SetContent sets the content of the message.
-func (m *UserMessage) SetContent(content string) Message {
-	m.content = content
-	return m
-}
-
 // Role returns the role of the message.
 func (m *UserMessage) Role() Role {
 	return RoleUser
-}
-
-// String returns the string representation of the message.
-func (m *UserMessage) String() string {
-	return m.content
-}
-
-// NewAIMessage creates a new AI message.
-func NewAIMessage() *AIMessage {
-	return &AIMessage{
-		id: uuid.New().String(),
-	}
 }
 
 // AIMessage is an AI chat message.
@@ -147,24 +109,6 @@ func (m *AIMessage) Content() string {
 	return m.content
 }
 
-// SetContent sets the content of the message.
-func (m *AIMessage) SetContent(content string) Message {
-	m.content = content
-	return m
-}
-
-// String returns the string representation of the message.
-func (m *AIMessage) String() string {
-	return m.content
-}
-
-// NewSystemMessage is a system chage message.
-func NewSystemMessage() *SystemMessage {
-	return &SystemMessage{
-		id: uuid.New().String(),
-	}
-}
-
 // SystemMessage is a system chat message.
 type SystemMessage struct {
 	id      string
@@ -181,20 +125,9 @@ func (m *SystemMessage) Content() string {
 	return m.content
 }
 
-// SetContent sets the content of the message.
-func (m *SystemMessage) SetContent(content string) Message {
-	m.content = content
-	return m
-}
-
 // Role returns the role of the message.
 func (m *SystemMessage) Role() Role {
 	return RoleAI
-}
-
-// String returns the string representation of the message.
-func (m *SystemMessage) String() string {
-	return m.content
 }
 
 // GenericMessage is a generic chat message.
@@ -224,16 +157,6 @@ func (m *GenericMessage) GetName() string {
 	return m.name
 }
 
-// SetName sets the name of the message.
-func (m *GenericMessage) SetName(name string) {
-	m.name = name
-}
-
-// String returns the string representation of the message.
-func (m *GenericMessage) String() string {
-	return m.content
-}
-
 // ToolMessage is a tool chat message.
 type ToolMessage struct {
 	id      string
@@ -253,9 +176,4 @@ func (m *ToolMessage) Role() Role {
 // ID returns the ID of the message.
 func (m *ToolMessage) ID() string {
 	return m.id
-}
-
-// String returns the string representation of the message.
-func (m *ToolMessage) String() string {
-	return m.content
 }

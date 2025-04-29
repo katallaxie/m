@@ -4,10 +4,8 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
-	"strings"
 	"sync"
 
-	"github.com/charmbracelet/bubbles/key"
 	"github.com/katallaxie/m/pkg/spec"
 )
 
@@ -23,37 +21,6 @@ type Flags struct {
 	Force bool
 	// Model is the model.
 	Model string
-}
-
-type ViewType string
-
-const ()
-
-type Keybinding struct {
-	Key     string `yaml:"key"`
-	Command string `yaml:"command"`
-	Builtin string `yaml:"builtin"`
-	Name    string `yaml:"name,omitempty"`
-}
-
-func (kb Keybinding) NewBinding(previous *key.Binding) key.Binding {
-	helpDesc := ""
-	if previous != nil {
-		helpDesc = previous.Help().Desc
-	}
-
-	if kb.Name != "" {
-		helpDesc = kb.Name
-	}
-
-	return key.NewBinding(
-		key.WithKeys(kb.Key),
-		key.WithHelp(kb.Key, helpDesc),
-	)
-}
-
-type Keybindings struct {
-	Universal []Keybinding `yaml:"universal"`
 }
 
 // NewFlags returns a new flags.
@@ -120,15 +87,4 @@ func (c *Config) LoadSpec() error {
 	}
 
 	return c.Spec.UnmarshalYAML(f)
-}
-
-// TruncateCommand truncates the command to 30 characters.
-func TruncateCommand(cmd string) string {
-	cmd = strings.ReplaceAll(cmd, "\n", "")
-
-	if len(cmd) > 30 {
-		return cmd[:30] + "..."
-	}
-
-	return cmd
 }
