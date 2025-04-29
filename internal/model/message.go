@@ -1,5 +1,7 @@
 package model
 
+import "github.com/google/uuid"
+
 // Role is a chat role.
 type Role string
 
@@ -65,6 +67,14 @@ func (m *HumanMessage) Content() string {
 // Role returns the role of the message.
 func (m *HumanMessage) Role() Role {
 	return RoleHuman
+}
+
+// NewUserMessage returns a new user message.
+func NewUserMessage(content string) *UserMessage {
+	return &UserMessage{
+		id:      uuid.NewString(),
+		content: content,
+	}
 }
 
 // UserMessage is a user chat message.

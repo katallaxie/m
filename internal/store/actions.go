@@ -6,9 +6,21 @@ import (
 	"github.com/katallaxie/pkg/redux"
 )
 
-// AddNotebookMsg
+// AddNotebookMsg ...
 type AddNotebookMsg struct {
 	Notebook model.Notebook
+}
+
+// AddChatMsg ...
+type AddChatMsg struct {
+	NotebookID uuid.UUID
+	model.Message
+}
+
+// AddCompletionMsg ...
+type AddCompletionMsg struct {
+	NotebookID uuid.UUID
+	Content    string
 }
 
 // Actions ...

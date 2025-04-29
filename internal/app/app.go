@@ -62,7 +62,7 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 	app.state = redux.New(
 		ctx,
 		store.NewState(),
-		// store.AddMessageReducer,
+		store.ChatMessageReducer,
 		// store.UpdateMessageReducer,
 		// store.SetStatusReducer,
 		store.AddNotebookReducer,

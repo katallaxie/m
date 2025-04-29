@@ -9,9 +9,22 @@ func AddNotebookReducer(prev State, msg redux.Msg) State {
 	switch m := msg.(type) {
 	case AddNotebookMsg:
 		prev.Notebooks[m.Notebook.ID] = m.Notebook
+		prev.CurrentNotebook = m.Notebook.ID
 	}
 
 	return prev
+}
+
+// ChatMessageReducer ...
+func ChatMessageReducer(curr State, msg redux.Msg) State {
+	switch m := msg.(type) {
+	case AddChatMsg:
+		notebook := curr.Notebooks[m.NotebookID]
+		notebook.AddMessages(m.Message)
+		curr.Notebooks[m.NotebookID] = notebook
+	}
+
+	return curr
 }
 
 // // UpdateMessageReducer ...

@@ -1,6 +1,8 @@
 package chat
 
 import (
+	"fmt"
+
 	"github.com/katallaxie/m/internal/store"
 	"github.com/katallaxie/m/internal/ui"
 	"github.com/rivo/tview"
@@ -21,15 +23,29 @@ func NewChat(app ui.Application[store.State], appName string, appVersion string)
 
 	chat.SetTitle(chat.title)
 	chat.SetBorder(true)
+	chat.SetDynamicColors(true)
+	chat.SetWrap(true)
+	chat.SetScrollable(true)
 
 	go func() {
 		store := app.GetStore()
 
 		for _ = range store.Subscribe() {
-			// app.QueueUpdateDraw(func() {
-			// 	chat.SetText(strings.Join(s.Curr().Messages, ""))
-			// 	chat.ScrollToEnd()
-			// })
+			app.QueueUpdateDraw(func() {
+				w := chat.BatchWriter()
+				defer w.Close()
+				w.Clear()
+
+				curr := store.State()
+				msgs := curr.Notebooks[curr.CurrentNotebook].Messages
+
+				for _, msg := range msgs {
+					fmt.Fprintln(w, "[red::] 👨‍💻 You:[-]")
+					fmt.Fprintln(w, msg.Content())
+				}
+
+				chat.ScrollToEnd()
+			})
 		}
 	}()
 
