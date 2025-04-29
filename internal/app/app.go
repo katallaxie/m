@@ -60,10 +60,11 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 
 	// State machine
 	app.state = redux.New(
+		ctx,
 		store.NewState(),
-		store.AddMessageReducer,
-		store.UpdateMessageReducer,
-		store.SetStatusReducer,
+		// store.AddMessageReducer,
+		// store.UpdateMessageReducer,
+		// store.SetStatusReducer,
 		store.AddNotebookReducer,
 	)
 
@@ -129,7 +130,11 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 		}
 
 		if command == cmd.NewNotebook {
-			app.GetStore().Dispatch(store.NewAddNotebook(model.NewNotebook()))
+			app.GetStore().Dispatch(func() redux.Msg {
+				return store.AddNotebookMsg{
+					Notebook: model.NewNotebook(),
+				}
+			})
 		}
 
 		return event

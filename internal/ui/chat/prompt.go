@@ -4,7 +4,6 @@ import (
 	"github.com/katallaxie/m/internal/api"
 	"github.com/katallaxie/m/internal/store"
 	"github.com/katallaxie/m/internal/ui"
-	"github.com/katallaxie/prompts"
 
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
@@ -42,34 +41,28 @@ func NewPrompt(app ui.Application[store.State], api *api.Api) *Prompt {
 	prompt.SetPlaceholder("Ask anything ...")
 	prompt.SetInputCapture(prompt.onInputCapture)
 
-	prompt.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		if event.Key() == tcell.KeyEnter {
-			prompt.onEnter(prompt.GetText())
-		}
-
-		return event
-	})
-
 	return prompt
 }
 
 func (p *Prompt) onEnter(prompt string) {
-	go func() {
-		p.app.GetStore().Dispatch(store.NewSetStatus(store.Loading))
-		// notebook := p.app.GetStore().State().Notebooks
+	// p.app.GetStore().Dispatch(store.NewSetStatus(store.Loading))
+	// // notebook := p.app.GetStore().State().Notebooks
 
-		fn := func(res *prompts.ChatCompletionResponse) error {
-			// p.app.GetStore().Dispatch(store.NewSetStatus(notebook.ID(), res))
+	// fn := func(res *prompts.ChatCompletionResponse) error {
+	// 	// p.app.GetStore().Dispatch(store.NewSetStatus(notebook.ID(), res))
 
-			return nil
-		}
+	// 	return nil
+	// }
 
-		_ = p.api.CreatePrompt(p.app.Context(), p.app.Config().Spec.Api.Model, prompt, fn)
-		p.app.GetStore().Dispatch(store.NewSetStatus(store.Success))
-	}()
+	// _ = p.api.CreatePrompt(p.app.Context(), p.app.Config().Spec.Api.Model, prompt, fn)
+	// p.app.GetStore().Dispatch(store.NewSetStatus(store.Success))
 }
 
 func (p *Prompt) onInputCapture(event *tcell.EventKey) *tcell.EventKey {
+	if event.Key() == tcell.KeyEnter {
+		p.onEnter(p.GetText())
+	}
+
 	return event
 }
 
