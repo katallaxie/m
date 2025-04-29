@@ -9,11 +9,12 @@ import (
 	"github.com/katallaxie/m/internal/config"
 	"github.com/katallaxie/m/internal/entity"
 	"github.com/katallaxie/m/internal/keymap"
-	"github.com/katallaxie/m/internal/model"
+	"github.com/katallaxie/m/internal/models"
 	"github.com/katallaxie/m/internal/store"
 	"github.com/katallaxie/m/internal/ui/activity"
 	"github.com/katallaxie/m/internal/ui/chat"
 	"github.com/katallaxie/m/internal/ui/help"
+	"github.com/katallaxie/m/internal/ui/history"
 	"github.com/katallaxie/m/internal/ui/infobar"
 	"github.com/katallaxie/m/internal/ui/modals"
 	"github.com/katallaxie/m/internal/ui/utils"
@@ -27,17 +28,19 @@ import (
 type App struct {
 	*tview.Application
 
-	theme   *entity.Theme
-	winMan  *winman.Manager
-	pages   *tview.Pages
-	menu    *tview.TextView
-	chat    *chat.Chat
-	prompt  *chat.Prompt
-	infoBar *infobar.InfoBar
-	config  *config.Config
-	state   redux.Store[store.State]
-	api     *api.Api
-	ctx     context.Context
+	api        *api.Api
+	chat       *chat.Chat
+	config     *config.Config
+	ctx        context.Context
+	history    *history.History
+	activities *activity.Activity
+	infoBar    *infobar.InfoBar
+	menu       *tview.TextView
+	pages      *tview.Pages
+	prompt     *chat.Prompt
+	state      redux.Store[store.State]
+	theme      *entity.Theme
+	winMan     *winman.Manager
 }
 
 // New returns a new application.
@@ -74,6 +77,12 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 	// Prompt panel
 	app.prompt = chat.NewPrompt(app, app.api)
 
+	// History panel
+	app.history = history.NewHistory(app)
+
+	// Activity panel
+	app.activities = activity.NewActivity(app)
+
 	// menu items
 	menuItems := [][]string{
 		{utils.HelpScreenKey.Label(), "Help"},
@@ -83,8 +92,8 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 	app.menu = newMenu(menuItems)
 
 	sidebarPanel := tview.NewFlex().SetDirection(tview.FlexRow).
-		AddItem(chat.NewNotebookList(app), 0, 1, true).
-		AddItem(activity.NewActivity(app), 3, 0, false)
+		AddItem(app.history, 0, 1, false).
+		AddItem(app.activities, 3, 0, false)
 
 	mainPanel := tview.NewFlex().SetDirection(tview.FlexRow).
 		AddItem(app.chat, 0, 3, false).
@@ -109,7 +118,6 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 		SetRoot(app.pages).
 		SetBorder(false)
 
-	// app.SetRoot(window, true)
 	app.EnableMouse(true)
 	app.EnablePaste(false)
 
@@ -132,7 +140,7 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 		if command == cmd.NewNotebook {
 			app.GetStore().Dispatch(func() redux.Msg {
 				return store.AddNotebookMsg{
-					Notebook: model.NewNotebook(),
+					Notebook: models.NewNotebook(),
 				}
 			})
 		}

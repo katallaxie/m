@@ -14,6 +14,7 @@ type Application[S redux.State] interface {
 	Context() context.Context
 	// Config returns the configuration of the application.
 	Config() *config.Config
+	// QuweueUpdateDraw adds a function to the queue to be executed in the main thread.
 	QueueUpdateDraw(f func())
 	GetState() S
 	GetStore() redux.Store[S]

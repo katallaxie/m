@@ -2,19 +2,19 @@ package store
 
 import (
 	"github.com/google/uuid"
-	"github.com/katallaxie/m/internal/model"
+	"github.com/katallaxie/m/internal/models"
 	"github.com/katallaxie/pkg/redux"
 )
 
 // AddNotebookMsg ...
 type AddNotebookMsg struct {
-	Notebook model.Notebook
+	Notebook models.Notebook
 }
 
 // AddChatMsg ...
 type AddChatMsg struct {
 	NotebookID uuid.UUID
-	model.Message
+	models.Message
 }
 
 // AddCompletionMsg ...
@@ -34,19 +34,19 @@ const (
 
 // AddNotebookPayload ...
 type AddNotebookPayload struct {
-	Notebook model.Notebook
+	Notebook models.Notebook
 }
 
 // AddMessagePayload ...
 type AddMessagePayload struct {
 	NotebookID uuid.UUID
-	Message    model.Message
+	Message    models.Message
 }
 
 // UpdateMessagePayload ...
 type UpdateMessagePayload struct {
 	NotebookID uuid.UUID
-	Message    model.Message
+	Message    models.Message
 }
 
 // // NewUpdateMessage returns a new action.

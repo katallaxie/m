@@ -2,7 +2,7 @@ package chat
 
 import (
 	"github.com/katallaxie/m/internal/api"
-	"github.com/katallaxie/m/internal/model"
+	"github.com/katallaxie/m/internal/models"
 	"github.com/katallaxie/m/internal/store"
 	"github.com/katallaxie/m/internal/ui"
 	"github.com/katallaxie/pkg/redux"
@@ -56,7 +56,7 @@ func (p *Prompt) onEnter(prompt string) {
 
 		return store.AddChatMsg{
 			NotebookID: curr.CurrentNotebook,
-			Message:    model.NewUserMessage(prompt),
+			Message:    models.NewUserMessage(prompt),
 		}
 	}
 	actions = slices.Append(actions, action)
@@ -88,6 +88,9 @@ func (p *Prompt) onEnter(prompt string) {
 func (p *Prompt) onInputCapture(event *tcell.EventKey) *tcell.EventKey {
 	if event.Key() == tcell.KeyEnter {
 		p.onEnter(p.GetText())
+		p.app.QueueUpdateDraw(func() {
+			p.SetText("", true)
+		})
 	}
 
 	return event
