@@ -5,7 +5,7 @@ import (
 )
 
 // AddNotebookReducer ...
-func AddNotebookReducer(curr State, msg redux.Msg) State {
+func AddNotebookReducer(curr State, msg redux.Update) State {
 	m, ok := msg.(AddNotebookMsg)
 	if !ok {
 		return curr
@@ -18,7 +18,7 @@ func AddNotebookReducer(curr State, msg redux.Msg) State {
 }
 
 // ChatMessageReducer ...
-func ChatMessageReducer(curr State, msg redux.Msg) State {
+func ChatMessageReducer(curr State, msg redux.Update) State {
 	m, ok := msg.(AddChatMsg)
 	if !ok {
 		return curr

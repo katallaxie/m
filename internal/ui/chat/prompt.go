@@ -51,7 +51,7 @@ func (p *Prompt) onEnter(prompt string) {
 	var action redux.Action
 	var actions []redux.Action
 
-	action = func() redux.Msg {
+	action = func() redux.Update {
 		curr := p.app.GetStore().State()
 
 		return store.AddChatMsg{

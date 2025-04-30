@@ -140,7 +140,7 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 		}
 
 		if command == cmd.NewNotebook {
-			app.GetStore().Dispatch(func() redux.Msg {
+			app.GetStore().Dispatch(func() redux.Update {
 				return store.AddNotebookMsg{
 					Notebook: models.NewNotebook(),
 				}
