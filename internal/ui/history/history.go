@@ -28,26 +28,32 @@ func NewHistory(app ui.Application[store.State]) *History {
 	history.SetInputCapture(history.onInputCapture)
 
 	sub := app.GetStore().Subscribe()
+	history.onUpdate(app.GetStore().State())
 
 	go func() {
 		for change := range sub {
 			app.QueueUpdateDraw(func() {
-				treeRoot := tview.NewTreeNode("📚 Library")
-
-				for _, notebook := range change.Curr().Notebooks {
-					node := tview.NewTreeNode(notebook.Name).
-						SetReference(notebook.ID).
-						SetColor(tcell.ColorLightCoral).
-						SetSelectable(true)
-					treeRoot.AddChild(node)
-				}
-
-				history.SetRoot(treeRoot)
+				history.onUpdate(change.Curr())
 			})
 		}
 	}()
 
 	return history
+}
+
+func (h *History) onUpdate(s store.State) {
+	treeRoot := tview.NewTreeNode("📚 Library")
+
+	for _, chat := range s.History.Chats {
+		node := tview.NewTreeNode(chat.Name).
+			SetReference(chat.ID).
+			SetColor(tcell.ColorLightCoral).
+			SetSelectable(true)
+		treeRoot.AddChild(node)
+		h.SetCurrentNode(node)
+	}
+
+	h.SetRoot(treeRoot)
 }
 
 func (h *History) onInputCapture(event *tcell.EventKey) *tcell.EventKey {

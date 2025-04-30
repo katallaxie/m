@@ -74,8 +74,8 @@ const (
 	FocusPrompt
 	FocusChat
 
-	// Notebook
-	NewNotebook
+	// Chat
+	NewChat
 
 	// Connection
 	NewConnection

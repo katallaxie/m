@@ -92,10 +92,10 @@ var (
 		KeyLabel: "F1",
 		KeyDesc:  "display help screen",
 	}
-	NewNotebookKey = uiKeyInfo{
+	NewChat = uiKeyInfo{
 		Key:      tcell.KeyF2,
 		KeyLabel: "F2",
-		KeyDesc:  "new notebook",
+		KeyDesc:  "new chat",
 	}
 	PodsScreenKey = uiKeyInfo{
 		Key:      tcell.KeyF3,
@@ -147,7 +147,7 @@ var UIKeysBindings = []uiKeyInfo{
 	ScrollDownKey,
 	AppExitKey,
 	HelpScreenKey,
-	NewNotebookKey,
+	NewChat,
 	PodsScreenKey,
 	ContainersScreenKey,
 	VolumesScreenKey,

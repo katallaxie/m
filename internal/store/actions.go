@@ -3,17 +3,21 @@ package store
 import (
 	"github.com/google/uuid"
 	"github.com/katallaxie/m/internal/models"
+	"github.com/katallaxie/pkg/redux"
 )
-
-// AddNotebookMsg ...
-type AddNotebookMsg struct {
-	Notebook models.Notebook
-}
 
 // AddChatMsg ...
 type AddChatMsg struct {
-	NotebookID uuid.UUID
-	models.Message
+	Chat *models.Chat
+}
+
+// NewAddChat ...
+func NewAddChat(chat *models.Chat) func() redux.Update {
+	return func() redux.Update {
+		return &AddChatMsg{
+			Chat: chat,
+		}
+	}
 }
 
 // AddCompletionMsg ...

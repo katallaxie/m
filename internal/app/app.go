@@ -60,14 +60,17 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 		config:      cfg,
 	}
 
+	state := store.NewState()
+	state.History.Next()
+
 	// State machine
 	app.state = redux.New(
 		ctx,
-		store.NewState(),
+		state,
 		store.ChatMessageReducer,
 		// store.UpdateMessageReducer,
 		// store.SetStatusReducer,
-		store.AddNotebookReducer,
+		// store.AddNotebookReducer,
 	)
 
 	// Chat panel
@@ -88,7 +91,7 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 	// menu items
 	menuItems := [][]string{
 		{utils.HelpScreenKey.Label(), "Help"},
-		{utils.NewNotebookKey.Label(), "New Notebook"},
+		{utils.NewChat.Label(), "New"},
 		{utils.AppExitKey.Label(), "Quit"},
 	}
 	app.menu = newMenu(menuItems)
@@ -139,12 +142,8 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 			app.SetFocus(app.prompt)
 		}
 
-		if command == cmd.NewNotebook {
-			app.GetStore().Dispatch(func() redux.Update {
-				return store.AddNotebookMsg{
-					Notebook: models.NewNotebook(),
-				}
-			})
+		if command == cmd.NewChat {
+			app.GetStore().Dispatch(store.NewAddChat(models.NewChat()))
 		}
 
 		return event

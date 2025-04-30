@@ -2,11 +2,8 @@ package chat
 
 import (
 	"github.com/katallaxie/m/internal/api"
-	"github.com/katallaxie/m/internal/models"
 	"github.com/katallaxie/m/internal/store"
 	"github.com/katallaxie/m/internal/ui"
-	"github.com/katallaxie/pkg/redux"
-	"github.com/katallaxie/pkg/slices"
 
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
@@ -48,20 +45,17 @@ func NewPrompt(app ui.Application[store.State], api *api.Api) *Prompt {
 }
 
 func (p *Prompt) onEnter(prompt string) {
-	var action redux.Action
-	var actions []redux.Action
+	// var action redux.Action
+	// var actions []redux.Action
 
-	action = func() redux.Update {
-		curr := p.app.GetStore().State()
+	// action = func() redux.Update {
+	// 	curr := p.app.GetStore().State()
 
-		return store.AddChatMsg{
-			NotebookID: curr.CurrentNotebook,
-			Message:    models.NewUserMessage(prompt),
-		}
-	}
-	actions = slices.Append(actions, action)
+	// 	return store.AddChatMsg{}
+	// }
+	// actions = slices.Append(actions, action)
 
-	p.app.GetStore().Dispatch(actions...)
+	// p.app.GetStore().Dispatch(actions...)
 
 	// p.app.GetStore().Dispatch(func() redux.Msg {
 	// 	_ = p.api.CreatePrompt(p.app.Context(), p.app.Config().Spec.Api.Model, prompt, func(res *prompts.ChatCompletionResponse) error {

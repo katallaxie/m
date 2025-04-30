@@ -4,28 +4,14 @@ import (
 	"github.com/katallaxie/pkg/redux"
 )
 
-// AddNotebookReducer ...
-func AddNotebookReducer(curr State, msg redux.Update) State {
-	m, ok := msg.(AddNotebookMsg)
-	if !ok {
-		return curr
-	}
-
-	curr.Notebooks[m.Notebook.ID] = m.Notebook
-	curr.CurrentNotebook = m.Notebook.ID
-
-	return curr
-}
-
 // ChatMessageReducer ...
 func ChatMessageReducer(curr State, msg redux.Update) State {
-	m, ok := msg.(AddChatMsg)
+	m, ok := msg.(*AddChatMsg)
 	if !ok {
 		return curr
 	}
-	notebook := curr.Notebooks[m.NotebookID]
-	notebook.AddMessages(m.Message)
-	curr.Notebooks[m.NotebookID] = notebook
+
+	curr.History.Append(m.Chat)
 
 	return curr
 }

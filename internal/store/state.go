@@ -17,6 +17,7 @@ type State struct {
 	Status          int
 	Error           error
 	CurrentNotebook uuid.UUID
+	History         *models.History
 	Notebooks       map[uuid.UUID]models.Notebook
 }
 
@@ -24,6 +25,7 @@ type State struct {
 func NewState() State {
 	return State{
 		Status:    Initial,
+		History:   models.NewHistory(),
 		Notebooks: make(map[uuid.UUID]models.Notebook),
 	}
 }
