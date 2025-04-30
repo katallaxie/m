@@ -69,6 +69,8 @@ const (
 	UnfocusSidebar
 	ToggleSidebar
 	Close
+
+	// Focus
 	FocusPrompt
 	FocusChat
 
@@ -83,7 +85,9 @@ const (
 	DeleteConnection
 )
 
+//nolint:gocyclo
 func (c Command) String() string {
+	//nolint:exhaustive
 	switch c {
 	case Noop:
 		return "Noop"

@@ -30,7 +30,7 @@ func NewChat(app ui.Application[store.State], appName string, appVersion string)
 	go func() {
 		store := app.GetStore()
 
-		for _ = range store.Subscribe() {
+		for range store.Subscribe() {
 			app.QueueUpdateDraw(func() {
 				w := chat.BatchWriter()
 				defer w.Close()

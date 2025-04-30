@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"path/filepath"
 	"unicode"
 )
 
@@ -21,7 +22,7 @@ type LogOptionsSetter interface {
 
 // LogToFileWith ...
 func LogToFileWith(path string, prefix string, log LogOptionsSetter) (*os.File, error) {
-	f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0o600) //nolint:mnd
+	f, err := os.OpenFile(filepath.Clean(path), os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0o600) //nolint:mnd
 	if err != nil {
 		return nil, fmt.Errorf("error opening file for logging: %w", err)
 	}

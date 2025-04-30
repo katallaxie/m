@@ -19,6 +19,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/katallaxie/pkg v0.7.6
 	github.com/katallaxie/prompts v0.0.4
+	github.com/mattn/go-isatty v0.0.20
 	github.com/navidys/tvxwidgets v0.11.0
 	github.com/pkg/errors v0.9.1
 	github.com/rivo/tview v0.0.0-20250325173046-7b72abf45814
@@ -307,7 +308,6 @@ require (
 	github.com/maratori/testpackage v1.1.1 // indirect
 	github.com/matoous/godox v1.1.0 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
-	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-mastodon v0.0.9 // indirect
 	github.com/mattn/go-runewidth v0.0.16 // indirect
 	github.com/mgechev/revive v1.7.0 // indirect

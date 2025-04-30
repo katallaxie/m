@@ -56,7 +56,6 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 		winMan:      wm,
 		theme:       &entity.TerminalTheme,
 		pages:       tview.NewPages(),
-		infoBar:     infobar.NewInfoBar("M", "0.1.0"),
 		api:         api.NewApi(client),
 		config:      cfg,
 	}
@@ -82,6 +81,9 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 
 	// Activity panel
 	app.activities = activity.NewActivity(app)
+
+	// Info bar
+	app.infoBar = infobar.NewInfoBar(appName, version)
 
 	// menu items
 	menuItems := [][]string{

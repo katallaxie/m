@@ -1,8 +1,6 @@
 package history
 
 import (
-	"fmt"
-
 	"github.com/gdamore/tcell/v2"
 	"github.com/katallaxie/m/internal/store"
 	"github.com/katallaxie/m/internal/ui"
@@ -27,7 +25,6 @@ func NewHistory(app ui.Application[store.State]) *History {
 	history.SetCurrentNode(treeRoot)
 	history.SetTitle(" 📚 History ")
 	history.SetBorder(true)
-
 	history.SetInputCapture(history.onInputCapture)
 
 	sub := app.GetStore().Subscribe()
@@ -53,11 +50,6 @@ func NewHistory(app ui.Application[store.State]) *History {
 	return history
 }
 
-func (notebookList *History) onInputCapture(event *tcell.EventKey) *tcell.EventKey {
-	switch event.Key() {
-	case tcell.KeyTab:
-		fmt.Printf("tab pressed\n")
-	}
-
+func (h *History) onInputCapture(event *tcell.EventKey) *tcell.EventKey {
 	return event
 }

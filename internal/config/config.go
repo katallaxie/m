@@ -4,7 +4,6 @@ import (
 	"os"
 	"os/user"
 	"path/filepath"
-	"sync"
 
 	"github.com/katallaxie/m/pkg/spec"
 )
@@ -40,8 +39,6 @@ type Config struct {
 	Spec *spec.Spec
 	// Flags ...
 	Flags *Flags
-
-	sync.RWMutex `json:"-" yaml:"-"`
 }
 
 // New returns a new config.

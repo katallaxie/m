@@ -5,24 +5,27 @@ import (
 )
 
 // AddNotebookReducer ...
-func AddNotebookReducer(prev State, msg redux.Msg) State {
-	switch m := msg.(type) {
-	case AddNotebookMsg:
-		prev.Notebooks[m.Notebook.ID] = m.Notebook
-		prev.CurrentNotebook = m.Notebook.ID
+func AddNotebookReducer(curr State, msg redux.Msg) State {
+	m, ok := msg.(AddNotebookMsg)
+	if !ok {
+		return curr
 	}
 
-	return prev
+	curr.Notebooks[m.Notebook.ID] = m.Notebook
+	curr.CurrentNotebook = m.Notebook.ID
+
+	return curr
 }
 
 // ChatMessageReducer ...
 func ChatMessageReducer(curr State, msg redux.Msg) State {
-	switch m := msg.(type) {
-	case AddChatMsg:
-		notebook := curr.Notebooks[m.NotebookID]
-		notebook.AddMessages(m.Message)
-		curr.Notebooks[m.NotebookID] = notebook
+	m, ok := msg.(AddChatMsg)
+	if !ok {
+		return curr
 	}
+	notebook := curr.Notebooks[m.NotebookID]
+	notebook.AddMessages(m.Message)
+	curr.Notebooks[m.NotebookID] = notebook
 
 	return curr
 }

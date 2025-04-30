@@ -57,10 +57,10 @@ func (a *App) ShowMessageBox_SetComponentActions(wnd *winman.WindowBase, form *t
 
 func (a *App) ShowMessageBox_SetInputCapture(wnd *winman.WindowBase, parent *tview.Form) {
 	parent.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		switch event.Key() {
-		case tcell.KeyEscape:
+		if event.Key() == tcell.KeyEscape {
 			a.CloseModalDialog(wnd, a.chat)
 		}
+
 		return event
 	})
 }
