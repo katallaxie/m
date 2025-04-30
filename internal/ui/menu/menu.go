@@ -1,19 +1,27 @@
-package app
+package menu
 
 import (
 	"fmt"
 	"strings"
 
 	"github.com/katallaxie/m/internal/ui/style"
-
 	"github.com/rivo/tview"
 )
 
-func newMenu(menuItems [][]string) *tview.TextView {
-	menu := tview.NewTextView().
-		SetDynamicColors(true).
-		SetWrap(true).
-		SetTextAlign(tview.AlignCenter)
+// Menu is a primitive for the app.
+type Menu struct {
+	*tview.TextView
+}
+
+// NewMenu creates a new menu.
+func NewMenu(appName string, appVersion string, menuItems [][]string) *Menu {
+	menu := &Menu{
+		TextView: tview.NewTextView(),
+	}
+
+	menu.SetDynamicColors(true)
+	menu.SetWrap(true)
+	menu.SetTextAlign(tview.AlignCenter)
 
 	menu.SetBackgroundColor(style.BgColor)
 

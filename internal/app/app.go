@@ -11,11 +11,11 @@ import (
 	"github.com/katallaxie/m/internal/keymap"
 	"github.com/katallaxie/m/internal/models"
 	"github.com/katallaxie/m/internal/store"
-	"github.com/katallaxie/m/internal/ui/activity"
 	"github.com/katallaxie/m/internal/ui/chat"
 	"github.com/katallaxie/m/internal/ui/help"
 	"github.com/katallaxie/m/internal/ui/history"
 	"github.com/katallaxie/m/internal/ui/infobar"
+	"github.com/katallaxie/m/internal/ui/menu"
 	"github.com/katallaxie/m/internal/ui/modals"
 	"github.com/katallaxie/m/internal/ui/utils"
 
@@ -28,19 +28,18 @@ import (
 type App struct {
 	*tview.Application
 
-	api        *api.Api
-	chat       *chat.Chat
-	config     *config.Config
-	ctx        context.Context
-	history    *history.History
-	activities *activity.Activity
-	infoBar    *infobar.InfoBar
-	menu       *tview.TextView
-	pages      *tview.Pages
-	prompt     *chat.Prompt
-	state      redux.Store[store.State]
-	theme      *entity.Theme
-	winMan     *winman.Manager
+	api     *api.Api
+	chat    *chat.Chat
+	config  *config.Config
+	ctx     context.Context
+	history *history.History
+	infoBar *infobar.InfoBar
+	menu    *menu.Menu
+	pages   *tview.Pages
+	prompt  *chat.Prompt
+	state   redux.Store[store.State]
+	theme   *entity.Theme
+	winMan  *winman.Manager
 }
 
 // New returns a new application.
@@ -83,7 +82,7 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 	app.history = history.NewHistory(app)
 
 	// Activity panel
-	app.activities = activity.NewActivity(app)
+	// app.activities = activity.NewActivity(app)
 
 	// Info bar
 	app.infoBar = infobar.NewInfoBar(appName, version)
@@ -94,11 +93,10 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 		{utils.NewChat.Label(), "New"},
 		{utils.AppExitKey.Label(), "Quit"},
 	}
-	app.menu = newMenu(menuItems)
+	app.menu = menu.NewMenu(appName, version, menuItems)
 
 	sidebarPanel := tview.NewFlex().SetDirection(tview.FlexRow).
-		AddItem(app.history, 0, 1, false).
-		AddItem(app.activities, 3, 0, false)
+		AddItem(app.history, 0, 1, false)
 
 	mainPanel := tview.NewFlex().SetDirection(tview.FlexRow).
 		AddItem(app.chat, 0, 3, false).
