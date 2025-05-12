@@ -27,21 +27,17 @@ func NewInfoBar(ctx *context.ProgramContext, app ui.Application[store.State]) *I
 	infoBar.SetBorder(true)
 	infoBar.SetTextAlign(tview.AlignCenter)
 	infoBar.SetDynamicColors(true)
+	infoBar.SetText(fmt.Sprintf("%s (%s) - %s", infoBar.ctx.GetAppName(), infoBar.ctx.GetAppVersion(), infoBar.app.GetState().History.Active().Name))
 
-	sub := app.GetStore().Subscribe()
-	infoBar.onUpdate(app.GetStore().State())
-
-	go func() {
-		for change := range sub {
-			app.QueueUpdateDraw(func() {
-				infoBar.onUpdate(change.Curr())
-			})
-		}
-	}()
+	go infoBar.onUpdate()
 
 	return infoBar
 }
 
-func (i *InfoBar) onUpdate(s store.State) {
-	i.SetText(fmt.Sprintf("%s (%s) - %s", i.ctx.GetAppName(), i.ctx.GetAppVersion(), s.History.Active().Name))
+func (i *InfoBar) onUpdate() {
+	for change := range i.app.GetStore().Subscribe() {
+		i.app.QueueUpdateDraw(func() {
+			i.SetText(fmt.Sprintf("%s (%s) - %s", i.ctx.GetAppName(), i.ctx.GetAppVersion(), change.Curr().History.Active().Name))
+		})
+	}
 }

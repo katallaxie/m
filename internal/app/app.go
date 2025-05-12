@@ -234,6 +234,13 @@ func (a *App) Init() error {
 	return nil
 }
 
+// QueueUpdate queues up a ui action.
+func (a *App) QueueUpdate(f func()) {
+	go func() {
+		a.Application.QueueUpdate(f)
+	}()
+}
+
 // QueueUpdateDraw queues up a ui action and redraw the ui.
 func (a *App) QueueUpdateDraw(f func()) {
 	go func() {

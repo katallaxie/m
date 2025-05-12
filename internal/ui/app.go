@@ -16,6 +16,8 @@ type Application[S redux.State] interface {
 	Config() *config.Config
 	// QuweueUpdateDraw adds a function to the queue to be executed in the main thread.
 	QueueUpdateDraw(f func())
+	// QueueUpdate adds a function to the queue to be executed in the main thread.
+	QueueUpdate(f func())
 	// Init initializes the application.
 	Init() error
 	GetState() S
