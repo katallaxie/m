@@ -37,9 +37,9 @@ func NewChat(app ui.Application[store.State], appName string, appVersion string)
 				w.Clear()
 
 				curr := store.State()
-				msgs := curr.Notebooks[curr.CurrentNotebook].Messages
+				state := curr.History.Active()
 
-				for _, msg := range msgs {
+				for _, msg := range state.Messages {
 					fmt.Fprintln(w, "[red::] 👨‍💻 You:[-]")
 					fmt.Fprintln(w, msg.Content())
 				}

@@ -13,6 +13,7 @@ import (
 type InfoBar struct {
 	*tview.TextView
 	app ui.Application[store.State]
+	ctx *context.ProgramContext
 }
 
 // NewInfoBar returns a new InfoBar.
@@ -20,14 +21,15 @@ func NewInfoBar(ctx *context.ProgramContext, app ui.Application[store.State]) *I
 	infoBar := &InfoBar{
 		TextView: tview.NewTextView(),
 		app:      app,
+		ctx:      ctx,
 	}
 
 	infoBar.SetBorder(true)
-	infoBar.SetText(fmt.Sprintf("%s (%s)", ctx.GetAppName(), ctx.GetAppVersion()))
 	infoBar.SetTextAlign(tview.AlignCenter)
 	infoBar.SetDynamicColors(true)
 
 	sub := app.GetStore().Subscribe()
+	infoBar.onUpdate(app.GetStore().State())
 
 	go func() {
 		for change := range sub {
@@ -41,4 +43,5 @@ func NewInfoBar(ctx *context.ProgramContext, app ui.Application[store.State]) *I
 }
 
 func (i *InfoBar) onUpdate(s store.State) {
+	i.SetText(fmt.Sprintf("%s (%s) - %s", i.ctx.GetAppName(), i.ctx.GetAppVersion(), s.History.Active().Name))
 }

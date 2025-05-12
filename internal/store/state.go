@@ -1,7 +1,6 @@
 package store
 
 import (
-	"github.com/google/uuid"
 	"github.com/katallaxie/m/internal/models"
 )
 
@@ -14,18 +13,15 @@ const (
 
 // State ...
 type State struct {
-	Status          int
-	Error           error
-	CurrentNotebook uuid.UUID
-	History         *models.History
-	Notebooks       map[uuid.UUID]models.Notebook
+	Status  int
+	Error   error
+	History *models.History
 }
 
 // NewState returns a new state.
 func NewState() State {
 	return State{
-		Status:    Initial,
-		History:   models.NewHistory(),
-		Notebooks: make(map[uuid.UUID]models.Notebook),
+		Status:  Initial,
+		History: models.NewHistory(),
 	}
 }
