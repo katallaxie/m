@@ -29,6 +29,10 @@ func NewFlags() *Flags {
 
 // Config contains the configuration.
 type Config struct {
+	// AppName is the name of the application.
+	AppName string
+	// Version is the version of the application.
+	Version string
 	// Stdin ...
 	Stdin *os.File
 	// Stdout ...
@@ -54,9 +58,8 @@ func Default() *Config {
 		Stderr: os.Stderr,
 		Spec:   spec.Default(),
 		Flags: &Flags{
-			File:    "~/.m.yml",
-			Verbose: false,
-			Model:   "smollm",
+			File:  "~/.m.yml",
+			Model: "smollm",
 		},
 	}
 }

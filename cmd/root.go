@@ -9,6 +9,8 @@ import (
 	"github.com/katallaxie/m/internal/config"
 	"github.com/katallaxie/m/internal/logs"
 
+	pctx "github.com/katallaxie/m/internal/context"
+
 	"github.com/spf13/cobra"
 )
 
@@ -64,7 +66,12 @@ func runRoot(ctx context.Context, _ *cobra.Command, _ ...string) error {
 
 	log.Print("debug log file created")
 
-	err = app.New(ctx, appName, version, cfg).Run()
+	cfg.Version = version
+	cfg.AppName = appName
+
+	pctx := pctx.New(ctx)
+
+	err = app.New(pctx, cfg).Run()
 	if err != nil {
 		return err
 	}

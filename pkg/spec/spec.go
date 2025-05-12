@@ -17,10 +17,8 @@ import (
 var validate = validator.New()
 
 const (
-	// DefaultDirectory is the default directory for the configuration file.
-	DefaultDirectory = "m"
 	// DefaultPath is the default path for the configuration file.
-	DefaultPath = ".m"
+	DefaultDirectory = ".m"
 	// DefaultFilename is the default filename for the configuration file.
 	DefaultFilename = ".m.yml"
 )
@@ -64,7 +62,12 @@ func (s *Spec) UnmarshalYAML(data []byte) error {
 	}
 
 	s.Version = spec.Version
-	s.Api = Api{spec.Api.Model, spec.Api.Provider, spec.Api.URL, spec.Api.Key}
+	s.Api = Api{
+		Model:    spec.Api.Model,
+		Provider: spec.Api.Provider,
+		URL:      spec.Api.URL,
+		Key:      spec.Api.Key,
+	}
 
 	return nil
 }

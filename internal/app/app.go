@@ -1,16 +1,15 @@
 package app
 
 import (
-	"context"
-
-	"github.com/gdamore/tcell/v2"
 	"github.com/katallaxie/m/internal/api"
 	"github.com/katallaxie/m/internal/cmd"
 	"github.com/katallaxie/m/internal/config"
+	"github.com/katallaxie/m/internal/context"
 	"github.com/katallaxie/m/internal/entity"
 	"github.com/katallaxie/m/internal/keymap"
 	"github.com/katallaxie/m/internal/models"
 	"github.com/katallaxie/m/internal/store"
+	"github.com/katallaxie/m/internal/ui"
 	"github.com/katallaxie/m/internal/ui/chat"
 	"github.com/katallaxie/m/internal/ui/help"
 	"github.com/katallaxie/m/internal/ui/history"
@@ -20,9 +19,12 @@ import (
 	"github.com/katallaxie/m/internal/ui/utils"
 
 	"github.com/epiclabs-io/winman"
+	"github.com/gdamore/tcell/v2"
 	"github.com/katallaxie/pkg/redux"
 	"github.com/rivo/tview"
 )
+
+var _ ui.Application[store.State] = (*App)(nil)
 
 // App is the main application.
 type App struct {
@@ -31,7 +33,7 @@ type App struct {
 	api     *api.Api
 	chat    *chat.Chat
 	config  *config.Config
-	ctx     context.Context
+	ctx     *context.ProgramContext
 	history *history.History
 	infoBar *infobar.InfoBar
 	menu    *menu.Menu
@@ -43,20 +45,21 @@ type App struct {
 }
 
 // New returns a new application.
-func New(ctx context.Context, appName, version string, cfg *config.Config) *App {
+func New(ctx *context.ProgramContext, cfg *config.Config) *App {
 	a := tview.NewApplication()
 	wm := winman.NewWindowManager()
 
 	client := api.ClientFactory(cfg.Spec.Api.Provider, cfg.Spec.Api.Model, cfg.Spec.Api.URL, cfg.Spec.Api.Key)
+	api := api.NewApi(client)
 
 	app := &App{
+		api:         api,
 		Application: a,
-		ctx:         ctx,
-		winMan:      wm,
-		theme:       &entity.TerminalTheme,
-		pages:       tview.NewPages(),
-		api:         api.NewApi(client),
 		config:      cfg,
+		ctx:         ctx,
+		pages:       tview.NewPages(),
+		theme:       &entity.TerminalTheme,
+		winMan:      wm,
 	}
 
 	state := store.NewState()
@@ -64,7 +67,7 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 
 	// State machine
 	app.state = redux.New(
-		ctx,
+		ctx.Context(),
 		state,
 		store.ChatMessageReducer,
 		// store.UpdateMessageReducer,
@@ -85,7 +88,7 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 	// app.activities = activity.NewActivity(app)
 
 	// Info bar
-	app.infoBar = infobar.NewInfoBar(appName, version)
+	app.infoBar = infobar.NewInfoBar(cfg.AppName, cfg.Version)
 
 	// menu items
 	menuItems := [][]string{
@@ -93,7 +96,7 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 		{utils.NewChat.Label(), "New"},
 		{utils.AppExitKey.Label(), "Quit"},
 	}
-	app.menu = menu.NewMenu(appName, version, menuItems)
+	app.menu = menu.NewMenu(cfg.AppName, cfg.Version, menuItems)
 
 	sidebarPanel := tview.NewFlex().SetDirection(tview.FlexRow).
 		AddItem(app.history, 0, 1, false)
@@ -153,7 +156,7 @@ func New(ctx context.Context, appName, version string, cfg *config.Config) *App 
 }
 
 // Context returns the context of the application.
-func (a *App) Context() context.Context {
+func (a *App) Context() *context.ProgramContext {
 	return a.ctx
 }
 
@@ -227,7 +230,8 @@ func (a *App) Run() error {
 }
 
 // Init initializes the application.
-func (a *App) Init() {
+func (a *App) Init() error {
+	return nil
 }
 
 // QueueUpdateDraw queues up a ui action and redraw the ui.
