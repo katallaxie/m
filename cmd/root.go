@@ -70,6 +70,8 @@ func runRoot(ctx context.Context, _ *cobra.Command, _ ...string) error {
 	cfg.AppName = appName
 
 	pctx := pctx.New(ctx)
+	pctx.SetAppName(cfg.AppName)
+	pctx.SetAppVersion(cfg.Version)
 
 	err = app.New(pctx, cfg).Run()
 	if err != nil {

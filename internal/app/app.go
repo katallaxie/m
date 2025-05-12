@@ -88,7 +88,7 @@ func New(ctx *context.ProgramContext, cfg *config.Config) *App {
 	// app.activities = activity.NewActivity(app)
 
 	// Info bar
-	app.infoBar = infobar.NewInfoBar(cfg.AppName, cfg.Version)
+	app.infoBar = infobar.NewInfoBar(ctx, app)
 
 	// menu items
 	menuItems := [][]string{
