@@ -20,9 +20,14 @@ type Application[S redux.State] interface {
 	QueueUpdate(f func())
 	// Init initializes the application.
 	Init() error
+	// GetState returns the state of the application.
 	GetState() S
+	// GetStore returns the store of the application.
 	GetStore() redux.Store[S]
+	// Stop stops the application.
 	Stop()
+	// Draw draws the application.
 	Draw()
+	// Pages returns the pages of the application.
 	Pages() *tview.Pages
 }

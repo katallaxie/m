@@ -35,9 +35,14 @@ func NewInfoBar(ctx *context.ProgramContext, app ui.Application[store.State]) *I
 }
 
 func (i *InfoBar) onUpdate() {
-	for change := range i.app.GetStore().Subscribe() {
-		i.app.QueueUpdateDraw(func() {
-			i.SetText(fmt.Sprintf("%s (%s) - %s", i.ctx.GetAppName(), i.ctx.GetAppVersion(), change.Curr().History.Active().Name))
-		})
+	for {
+		select {
+		case <-i.ctx.Context().Done():
+			return
+		case change := <-i.app.GetStore().Subscribe():
+			i.app.QueueUpdateDraw(func() {
+				i.SetText(fmt.Sprintf("%s (%s) - %s", i.ctx.GetAppName(), i.ctx.GetAppVersion(), change.Curr().History.Active().Name))
+			})
+		}
 	}
 }
