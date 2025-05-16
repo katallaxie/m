@@ -16,6 +16,7 @@ import (
 	"github.com/katallaxie/m/internal/ui/infobar"
 	"github.com/katallaxie/m/internal/ui/menu"
 	"github.com/katallaxie/m/internal/ui/modals"
+	"github.com/katallaxie/m/internal/ui/prompt"
 	"github.com/katallaxie/m/internal/ui/utils"
 
 	"github.com/epiclabs-io/winman"
@@ -38,7 +39,7 @@ type App struct {
 	infoBar *infobar.InfoBar
 	menu    *menu.Menu
 	pages   *tview.Pages
-	prompt  *chat.Prompt
+	prompt  *prompt.Prompt
 	state   redux.Store[store.State]
 	theme   *entity.Theme
 	winMan  *winman.Manager
@@ -79,7 +80,7 @@ func New(ctx *context.ProgramContext, cfg *config.Config) *App {
 	app.chat = chat.NewChat(app, "M", "0.1.0")
 
 	// Prompt panel
-	app.prompt = chat.NewPrompt(app, app.api)
+	app.prompt = prompt.NewPrompt(app, app.api)
 
 	// History panel
 	app.history = history.NewHistory(app)

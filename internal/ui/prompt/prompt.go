@@ -1,4 +1,4 @@
-package chat
+package prompt
 
 import (
 	"github.com/katallaxie/m/internal/api"
