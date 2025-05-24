@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
@@ -16,6 +17,17 @@ type application struct {
 	previousPage pages.ID
 
 	width, height int
+}
+
+type keyMap struct {
+	Quit key.Binding
+}
+
+var keys = keyMap{
+	Quit: key.NewBinding(
+		key.WithKeys("ctrl+c"),
+		key.WithHelp("ctrl+c", "quit"),
+	),
 }
 
 // New returns a new application instance.
@@ -50,6 +62,12 @@ func (a application) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.WindowSizeMsg:
 		msg.Height -= 1 // Make space for the status bar
 		a.width, a.height = msg.Width, msg.Height
+	case tea.KeyMsg:
+		switch {
+
+		case key.Matches(msg, keys.Quit):
+			return a, tea.Quit
+		}
 	}
 
 	return a, tea.Batch(cmds...)
