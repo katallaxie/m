@@ -84,6 +84,11 @@ func runRoot(ctx context.Context, _ *cobra.Command, _ ...string) error {
 		tea.WithAltScreen(),
 	)
 
+	_, err = program.Run()
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 

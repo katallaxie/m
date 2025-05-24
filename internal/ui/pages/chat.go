@@ -15,13 +15,25 @@ type chat struct {
 }
 
 func (c *chat) Init() tea.Cmd {
-	cmds := []tea.Cmd{}
+	cmds := []tea.Cmd{
+		c.layout.Init(),
+	}
 
 	return tea.Batch(cmds...)
 }
 
 func (c *chat) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmds []tea.Cmd
+
+	switch msg := msg.(type) {
+	case tea.WindowSizeMsg:
+		cmd := c.layout.SetSize(msg.Width, msg.Height)
+		cmds = append(cmds, cmd)
+	}
+
+	u, cmd := c.layout.Update(msg)
+	cmds = append(cmds, cmd)
+	c.layout = u.(layout.SplitPaneLayout)
 
 	return c, tea.Batch(cmds...)
 }
@@ -41,7 +53,10 @@ func (c *chat) View() string {
 }
 
 func NewChat(app *app.App) tea.Model {
-	return &chat{
-		app: app,
-	}
+	c := new(chat)
+	c.app = app
+
+	c.layout = layout.NewSplitPane()
+
+	return c
 }
