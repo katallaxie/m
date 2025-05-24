@@ -1,33 +1,66 @@
 package ui
 
 import (
-	"github.com/katallaxie/m/internal/config"
-	"github.com/katallaxie/m/internal/context"
+	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 
-	"github.com/katallaxie/pkg/redux"
-	"github.com/rivo/tview"
+	"github.com/katallaxie/m/internal/app"
+	"github.com/katallaxie/m/internal/ui/pages"
 )
 
-// Application ...
-type Application[S redux.State] interface {
-	// Context returns the context of the application.
-	Context() *context.ProgramContext
-	// Config returns the configuration of the application.
-	Config() *config.Config
-	// QuweueUpdateDraw adds a function to the queue to be executed in the main thread.
-	QueueUpdateDraw(f func())
-	// QueueUpdate adds a function to the queue to be executed in the main thread.
-	QueueUpdate(f func())
-	// Init initializes the application.
-	Init() error
-	// GetState returns the state of the application.
-	GetState() S
-	// GetStore returns the store of the application.
-	GetStore() redux.Store[S]
-	// Stop stops the application.
-	Stop()
-	// Draw draws the application.
-	Draw()
-	// Pages returns the pages of the application.
-	Pages() *tview.Pages
+type application struct {
+	app *app.App
+
+	pages        map[pages.ID]tea.Model
+	currentPage  pages.ID
+	previousPage pages.ID
+
+	width, height int
+}
+
+// New returns a new application instance.
+func New(app *app.App) tea.Model {
+	startPage := pages.Chat
+
+	a := new(application)
+	a.app = app
+
+	a.currentPage = startPage
+
+	a.pages = make(map[pages.ID]tea.Model)
+	a.pages[pages.Chat] = pages.NewChat(app)
+
+	return a
+}
+
+func (a application) Init() tea.Cmd {
+	var cmds []tea.Cmd
+
+	cmd := a.pages[a.currentPage].Init()
+	cmds = append(cmds, cmd)
+
+	return tea.Batch(cmds...)
+}
+
+func (a application) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	var cmds []tea.Cmd
+	// var cmd tea.Cmd
+
+	switch msg := msg.(type) {
+	case tea.WindowSizeMsg:
+		msg.Height -= 1 // Make space for the status bar
+		a.width, a.height = msg.Width, msg.Height
+	}
+
+	return a, tea.Batch(cmds...)
+}
+
+func (a application) View() string {
+	components := []string{
+		a.pages[a.currentPage].View(),
+	}
+
+	appView := lipgloss.JoinVertical(lipgloss.Top, components...)
+
+	return appView
 }

@@ -5,11 +5,13 @@ import (
 	"fmt"
 	"log"
 
+	tea "github.com/charmbracelet/bubbletea"
+	zone "github.com/lrstanley/bubblezone"
+
 	"github.com/katallaxie/m/internal/app"
 	"github.com/katallaxie/m/internal/config"
 	"github.com/katallaxie/m/internal/logs"
-
-	pctx "github.com/katallaxie/m/internal/context"
+	"github.com/katallaxie/m/internal/ui"
 
 	"github.com/spf13/cobra"
 )
@@ -69,14 +71,18 @@ func runRoot(ctx context.Context, _ *cobra.Command, _ ...string) error {
 	cfg.Version = version
 	cfg.AppName = appName
 
-	pctx := pctx.New(ctx)
-	pctx.SetAppName(cfg.AppName)
-	pctx.SetAppVersion(cfg.Version)
-
-	err = app.New(pctx, cfg).Run()
+	app, err := app.New(ctx, cfg)
 	if err != nil {
 		return err
 	}
+
+	defer app.Dispose()
+
+	zone.NewGlobal()
+	program := tea.NewProgram(
+		ui.New(app),
+		tea.WithAltScreen(),
+	)
 
 	return nil
 }
