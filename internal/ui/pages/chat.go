@@ -3,6 +3,7 @@ package pages
 import (
 	"github.com/katallaxie/m/internal/app"
 	"github.com/katallaxie/m/internal/ui/layout"
+	"github.com/katallaxie/m/internal/ui/prompt"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -56,7 +57,14 @@ func NewChat(app *app.App) tea.Model {
 	c := new(chat)
 	c.app = app
 
-	c.layout = layout.NewSplitPane()
+	prompt := layout.NewContainer(
+		prompt.NewPrompt(app),
+		layout.WithBorder(true, false, false, false),
+	)
+
+	c.layout = layout.NewSplitPane(
+		layout.WithBottomPanel(prompt),
+	)
 
 	return c
 }
