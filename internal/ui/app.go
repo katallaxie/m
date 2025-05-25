@@ -7,6 +7,8 @@ import (
 
 	"github.com/katallaxie/m/internal/app"
 	"github.com/katallaxie/m/internal/ui/pages"
+	"github.com/katallaxie/m/internal/ui/status"
+	"github.com/katallaxie/pkg/slices"
 )
 
 type application struct {
@@ -15,6 +17,8 @@ type application struct {
 	pages        map[pages.ID]tea.Model
 	currentPage  pages.ID
 	previousPage pages.ID
+
+	status status.Status
 
 	width, height int
 }
@@ -42,6 +46,8 @@ func New(app *app.App) tea.Model {
 	a.pages = make(map[pages.ID]tea.Model)
 	a.pages[pages.Chat] = pages.NewChat(app)
 
+	a.status = status.NewStatus()
+
 	return a
 }
 
@@ -51,17 +57,27 @@ func (a application) Init() tea.Cmd {
 	cmd := a.pages[a.currentPage].Init()
 	cmds = append(cmds, cmd)
 
+	cmd = a.status.Init()
+	cmds = append(cmds, cmd)
+
 	return tea.Batch(cmds...)
 }
 
 func (a application) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmds []tea.Cmd
-	// var cmd tea.Cmd
+	var cmd tea.Cmd
 
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
 		msg.Height -= 1 // Make space for the status bar
 		a.width, a.height = msg.Width, msg.Height
+
+		s, _ := a.status.Update(msg)
+		a.status = s.(status.Status)
+		a.pages[a.currentPage], cmd = a.pages[a.currentPage].Update(msg)
+		cmds = append(cmds, cmd)
+
+		return a, tea.Batch(cmds...)
 	case tea.KeyMsg:
 		switch {
 
@@ -70,6 +86,11 @@ func (a application) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 	}
 
+	s, _ := a.status.Update(msg)
+	a.status = s.(status.Status)
+	a.pages[a.currentPage], cmd = a.pages[a.currentPage].Update(msg)
+	cmds = append(cmds, cmd)
+
 	return a, tea.Batch(cmds...)
 }
 
@@ -77,6 +98,7 @@ func (a application) View() string {
 	components := []string{
 		a.pages[a.currentPage].View(),
 	}
+	components = slices.Append(components, a.status.View())
 
 	appView := lipgloss.JoinVertical(lipgloss.Top, components...)
 

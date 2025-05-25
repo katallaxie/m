@@ -2,6 +2,12 @@ package utils
 
 import "github.com/rivo/tview"
 
+type (
+	InfoMsg struct {
+	}
+	ClearStatusMsg struct{}
+)
+
 func SetActive(box *tview.Box, title string, active bool) {
 	// if active {
 	// 	box.SetBorderColor(STYLE_BORDER_FOCUS.Fg)
