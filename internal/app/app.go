@@ -4,6 +4,8 @@ import (
 	"context"
 
 	"github.com/katallaxie/m/internal/config"
+	"github.com/katallaxie/m/internal/ports"
+	"github.com/katallaxie/pkg/dbx"
 	"github.com/katallaxie/prompts"
 )
 
@@ -12,6 +14,7 @@ type App struct {
 	// *tview.Application
 
 	client prompts.Chat
+	store  dbx.Database[ports.ReadTx, ports.ReadWriteTx]
 
 	// api     *api.Api
 	// chat    *chat.Chat
@@ -28,8 +31,10 @@ type App struct {
 }
 
 // New returns a new application.
-func New(ctx context.Context, client prompts.Chat, cfg config.Config) (*App, error) {
+func New(ctx context.Context, store dbx.Database[ports.ReadTx, ports.ReadWriteTx], client prompts.Chat, cfg config.Config) (*App, error) {
 	app := new(App)
+	app.store = store
+	app.client = client
 
 	err := app.Init()
 	if err != nil {

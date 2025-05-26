@@ -20,6 +20,8 @@ const (
 	DefaultDirectory = ".m"
 	// DefaultFilename is the default filename for the configuration file.
 	DefaultFilename = ".m.yml"
+	// DefaultTheme is the default theme for the CLI.
+	DefaultTheme = "dracula"
 )
 
 // Provider is the provider configuration for the API.
@@ -40,6 +42,8 @@ type Spec struct {
 	Version int `yaml:"version" validate:"required,eq=1"`
 	// Provider is the provider configuration for the API.
 	Provider *Provider `yaml:"provider" validate:"required"`
+	// Theme is the theme for the CLI.
+	Theme string `yaml:"theme" validate:"omitempty`
 }
 
 // UnmarshalYAML unmarshals the configuration file.
@@ -52,6 +56,7 @@ func (s *Spec) UnmarshalYAML(data []byte) error {
 			URL   string `yaml:"url"`
 			Key   string `yaml:"key"`
 		} `yaml:"api" validate:"required"`
+		Theme string `yaml:"theme" validate:"omitempty"`
 	}{}
 
 	if err := yaml.Unmarshal(data, &spec); err != nil {
@@ -65,6 +70,7 @@ func (s *Spec) UnmarshalYAML(data []byte) error {
 		URL:   spec.Provider.URL,
 		Key:   spec.Provider.Key,
 	}
+	s.Theme = spec.Theme
 
 	return nil
 }
@@ -73,6 +79,7 @@ func (s *Spec) UnmarshalYAML(data []byte) error {
 func Default() *Spec {
 	return &Spec{
 		Version: 1,
+		Theme:   DefaultTheme,
 	}
 }
 

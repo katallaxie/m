@@ -5,18 +5,22 @@ import (
 	"fmt"
 	"log"
 
-	tea "github.com/charmbracelet/bubbletea"
+	"github.com/katallaxie/m/internal/app"
+	"github.com/katallaxie/m/internal/config"
+	"github.com/katallaxie/m/internal/db"
+	"github.com/katallaxie/m/internal/logs"
+	"github.com/katallaxie/m/internal/models"
+	"github.com/katallaxie/m/internal/ui"
+	"github.com/katallaxie/pkg/dbx"
 	"github.com/katallaxie/prompts"
 	"github.com/katallaxie/prompts/ollama"
 	"github.com/katallaxie/prompts/perplexity"
+
+	tea "github.com/charmbracelet/bubbletea"
 	zone "github.com/lrstanley/bubblezone"
-
-	"github.com/katallaxie/m/internal/app"
-	"github.com/katallaxie/m/internal/config"
-	"github.com/katallaxie/m/internal/logs"
-	"github.com/katallaxie/m/internal/ui"
-
 	"github.com/spf13/cobra"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 var cfg = config.Default()
@@ -74,6 +78,23 @@ func runRoot(ctx context.Context, _ *cobra.Command, _ ...string) error {
 	cfg.Version = version
 	cfg.AppName = appName
 
+	conn, err := gorm.Open(sqlite.Open("./m.db"), &gorm.Config{})
+	if err != nil {
+		return err
+	}
+
+	store, err := dbx.NewDatabase(conn, db.NewReadTx(), db.NewWriteTx())
+	if err != nil {
+		return err
+	}
+
+	err = store.Migrate(ctx,
+		&models.Session{},
+	)
+	if err != nil {
+		return err
+	}
+
 	var client prompts.Chat
 
 	switch cfg.Spec.Provider.API {
@@ -83,7 +104,7 @@ func runRoot(ctx context.Context, _ *cobra.Command, _ ...string) error {
 		client = ollama.New(ollama.WithBaseURL(cfg.Spec.Provider.URL))
 	}
 
-	app, err := app.New(ctx, client, cfg)
+	app, err := app.New(ctx, store, client, cfg)
 	if err != nil {
 		return err
 	}

@@ -12,4 +12,5 @@ func TestDefault(t *testing.T) {
 
 	defaults := spec.Default()
 	assert.Equal(t, 1, defaults.Version)
+	assert.Equal(t, "dracula", defaults.Theme)
 }
