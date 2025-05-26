@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"log"
 
@@ -15,8 +16,10 @@ import (
 	"github.com/katallaxie/prompts"
 	"github.com/katallaxie/prompts/ollama"
 	"github.com/katallaxie/prompts/perplexity"
+	"github.com/mattn/go-sqlite3"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/google/uuid"
 	zone "github.com/lrstanley/bubblezone"
 	"github.com/spf13/cobra"
 	"gorm.io/driver/sqlite"
@@ -77,6 +80,21 @@ func runRoot(ctx context.Context, _ *cobra.Command, _ ...string) error {
 
 	cfg.Version = version
 	cfg.AppName = appName
+
+	sql.Register("sqlite3_extended",
+		&sqlite3.SQLiteDriver{
+			ConnectHook: func(conn *sqlite3.SQLiteConn) error {
+				err := conn.RegisterFunc(
+					"gen_random_uuid",
+					func(arguments ...interface{}) (string, error) {
+						return uuid.NewString(), nil // Return a string value.
+					},
+					true,
+				)
+				return err
+			},
+		},
+	)
 
 	conn, err := gorm.Open(sqlite.Open("./m.db"), &gorm.Config{})
 	if err != nil {
