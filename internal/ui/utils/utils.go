@@ -13,3 +13,11 @@ func EmptyBoxSpace(bgColor tcell.Color) *tview.Box {
 
 	return box
 }
+
+// Clamp clamps the value v to the range [low, high].
+func Clamp(v, low, high int) int {
+	if high < low {
+		low, high = high, low
+	}
+	return min(high, max(low, v))
+}
