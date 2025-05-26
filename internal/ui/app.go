@@ -51,6 +51,7 @@ func New(app *app.App) tea.Model {
 	return a
 }
 
+// Init initializes the application and its components.
 func (a application) Init() tea.Cmd {
 	var cmds []tea.Cmd
 
@@ -63,6 +64,7 @@ func (a application) Init() tea.Cmd {
 	return tea.Batch(cmds...)
 }
 
+// Update handles the application state updates based on messages.
 func (a application) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmds []tea.Cmd
 	var cmd tea.Cmd
@@ -94,6 +96,7 @@ func (a application) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return a, tea.Batch(cmds...)
 }
 
+// View renders the application view.
 func (a application) View() string {
 	components := []string{
 		a.pages[a.currentPage].View(),

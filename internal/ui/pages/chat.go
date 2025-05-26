@@ -4,6 +4,7 @@ import (
 	"github.com/katallaxie/m/internal/app"
 	"github.com/katallaxie/m/internal/ui/layout"
 	"github.com/katallaxie/m/internal/ui/prompt"
+	"github.com/katallaxie/m/internal/ui/sidebar"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
@@ -25,6 +26,8 @@ func (c *chat) Init() tea.Cmd {
 
 func (c *chat) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmds []tea.Cmd
+
+	cmd := c.setSidebar()
 
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
@@ -51,6 +54,15 @@ func (c *chat) View() string {
 	view := c.layout.View()
 
 	return view
+}
+
+func (c *chat) setSidebar() tea.Cmd {
+	sidebarContainer := layout.NewContainer(
+		sidebar.New(),
+		layout.WithPadding(1, 1, 1, 1),
+	)
+
+	return tea.Batch(c.layout.SetRightPanel(sidebarContainer), sidebarContainer.Init())
 }
 
 func NewChat(app *app.App) tea.Model {
