@@ -21,7 +21,8 @@
         "GitHub.copilot",
         "GitHub.vscode-github-actions",
         "golang.go",
-        "ms-vscode.makefile-tools"
+        "ms-vscode.makefile-tools",
+        "qwtel.sqlite-viewer"
       ]
     }
   }
