@@ -42,22 +42,22 @@ type Config struct {
 	// Spec is the configuration specification.
 	Spec *spec.Spec
 	// Flags ...
-	Flags *Flags
+	Flags Flags
 }
 
 // New returns a new config.
-func New() *Config {
-	return &Config{}
+func New() Config {
+	return Config{}
 }
 
 // Default returns the default configuration.
-func Default() *Config {
-	return &Config{
+func Default() Config {
+	return Config{
 		Stdin:  os.Stdin,
 		Stdout: os.Stdout,
 		Stderr: os.Stderr,
 		Spec:   spec.Default(),
-		Flags: &Flags{
+		Flags: Flags{
 			File:  "~/.m.yml",
 			Model: "smollm",
 		},

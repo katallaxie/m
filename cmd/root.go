@@ -6,6 +6,9 @@ import (
 	"log"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/katallaxie/prompts"
+	"github.com/katallaxie/prompts/ollama"
+	"github.com/katallaxie/prompts/perplexity"
 	zone "github.com/lrstanley/bubblezone"
 
 	"github.com/katallaxie/m/internal/app"
@@ -71,7 +74,16 @@ func runRoot(ctx context.Context, _ *cobra.Command, _ ...string) error {
 	cfg.Version = version
 	cfg.AppName = appName
 
-	app, err := app.New(ctx, cfg)
+	var client prompts.Chat
+
+	switch cfg.Spec.Provider.API {
+	case "perplexity":
+		client = perplexity.New(perplexity.WithApiKey(cfg.Spec.Provider.Key))
+	default:
+		client = ollama.New(ollama.WithBaseURL(cfg.Spec.Provider.URL))
+	}
+
+	app, err := app.New(ctx, client, cfg)
 	if err != nil {
 		return err
 	}

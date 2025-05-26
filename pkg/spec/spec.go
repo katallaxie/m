@@ -6,7 +6,6 @@ import (
 	"path/filepath"
 	"reflect"
 	"strings"
-	"sync"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/katallaxie/pkg/filex"
@@ -23,12 +22,12 @@ const (
 	DefaultFilename = ".m.yml"
 )
 
-// Api is the configuration for the API.
-type Api struct {
+// Provider is the provider configuration for the API.
+type Provider struct {
 	// Model is the model to use.
 	Model string `yaml:"model"`
-	// Provider is the provider for the model.
-	Provider string `yaml:"provider" validate:"required"`
+	// API is the API provider.
+	API string `yaml:"api"`
 	// URL is the URL for the API.
 	URL string `yaml:"url"`
 	// Key is the key for the API.
@@ -39,21 +38,19 @@ type Api struct {
 type Spec struct {
 	// Version is the version of the configuration file.
 	Version int `yaml:"version" validate:"required,eq=1"`
-	// Api is the API configuration.
-	Api Api `yaml:"api" validate:"required"`
-
-	sync.Mutex `yaml:"-"`
+	// Provider is the provider configuration for the API.
+	Provider *Provider `yaml:"provider" validate:"required"`
 }
 
 // UnmarshalYAML unmarshals the configuration file.
 func (s *Spec) UnmarshalYAML(data []byte) error {
 	spec := struct {
-		Version int `yaml:"version" validate:"required,eq=1"`
-		Api     struct {
-			Model    string `yaml:"model" validate:"required"`
-			Provider string `yaml:"provider" validate:"required"`
-			URL      string `yaml:"url"`
-			Key      string `yaml:"key"`
+		Version  int `yaml:"version" validate:"required,eq=1"`
+		Provider struct {
+			Model string `yaml:"model"`
+			API   string `yaml:"api"`
+			URL   string `yaml:"url"`
+			Key   string `yaml:"key"`
 		} `yaml:"api" validate:"required"`
 	}{}
 
@@ -62,11 +59,11 @@ func (s *Spec) UnmarshalYAML(data []byte) error {
 	}
 
 	s.Version = spec.Version
-	s.Api = Api{
-		Model:    spec.Api.Model,
-		Provider: spec.Api.Provider,
-		URL:      spec.Api.URL,
-		Key:      spec.Api.Key,
+	s.Provider = &Provider{
+		Model: spec.Provider.Model,
+		API:   spec.Provider.API,
+		URL:   spec.Provider.URL,
+		Key:   spec.Provider.Key,
 	}
 
 	return nil

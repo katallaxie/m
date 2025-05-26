@@ -4,11 +4,14 @@ import (
 	"context"
 
 	"github.com/katallaxie/m/internal/config"
+	"github.com/katallaxie/prompts"
 )
 
 // App is the main application.
 type App struct {
 	// *tview.Application
+
+	client prompts.Chat
 
 	// api     *api.Api
 	// chat    *chat.Chat
@@ -25,7 +28,7 @@ type App struct {
 }
 
 // New returns a new application.
-func New(ctx context.Context, cfg *config.Config) (*App, error) {
+func New(ctx context.Context, client prompts.Chat, cfg config.Config) (*App, error) {
 	app := new(App)
 
 	err := app.Init()

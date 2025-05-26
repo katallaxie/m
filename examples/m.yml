@@ -1,6 +1,6 @@
 version: 1
 # Defines the model to use
-api:
-  provider: ollama
+provider:
+  api: ollama
   model: smollm
   url: http://localhost:7869/api/chat
