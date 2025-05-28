@@ -41,7 +41,7 @@ func (s status) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func getHelpWidget() string {
 	t := theme.Current()
 
-	helpText := "ctrl+? help"
+	helpText := "ctrl+h help"
 
 	return styles.Padded().
 		Background(t.TextMuted()).
