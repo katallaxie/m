@@ -104,7 +104,7 @@ func (t *themeDialog) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case key.Matches(msg, themeKeys.Enter):
 			return t, nil
 			// if len(t.themes) > 0 {
-			// 	previousTheme := theme.CurrentThemeName()
+			// 	previousTheme := theme.Current()
 			// 	selectedTheme := t.themes[t.selectedIdx]
 			// 	if previousTheme == selectedTheme {
 			// 		return t, util.CmdHandler(CloseThemeDialogMsg{})
@@ -116,8 +116,10 @@ func (t *themeDialog) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// 		ThemeName: selectedTheme,
 			// 	})
 			// }
-			// case key.Matches(msg, themeKeys.Escape):
-			// 	return t, util.CmdHandler(CloseThemeDialogMsg{})
+		case key.Matches(msg, themeKeys.Escape):
+			return t, func() tea.Msg {
+				return CloseThemeDialogMsg{}
+			}
 		}
 	case tea.WindowSizeMsg:
 		t.width = msg.Width

@@ -108,6 +108,9 @@ func (a application) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		cmds = append(cmds, helpCmd)
 
 		return a, tea.Batch(cmds...)
+	case dialogs.CloseThemeDialogMsg:
+		a.showThemeDialog = false
+		return a, nil
 	case tea.KeyMsg:
 		switch {
 		case key.Matches(msg, keys.Quit):
