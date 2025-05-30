@@ -18,6 +18,13 @@ type ThemeChangedMsg struct {
 // CloseThemeDialogMsg is sent when the theme dialog is closed
 type CloseThemeDialogMsg struct{}
 
+// CloseThemeDialogCmd is a command to close the theme dialog
+func CloseThemeDialogCmd() tea.Cmd {
+	return func() tea.Msg {
+		return CloseThemeDialogMsg{}
+	}
+}
+
 // ThemeDialog interface for the theme switching dialog
 type ThemeDialog interface {
 	tea.Model
@@ -117,9 +124,7 @@ func (t *themeDialog) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			// 	})
 			// }
 		case key.Matches(msg, themeKeys.Escape):
-			return t, func() tea.Msg {
-				return CloseThemeDialogMsg{}
-			}
+			return t, CloseThemeDialogCmd()
 		}
 	case tea.WindowSizeMsg:
 		t.width = msg.Width
