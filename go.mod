@@ -17,7 +17,7 @@ require (
 	github.com/charmbracelet/lipgloss v1.1.0
 	github.com/charmbracelet/x/ansi v0.9.3
 	github.com/gdamore/tcell/v2 v2.8.1
-	github.com/go-playground/validator/v10 v10.26.0
+	github.com/go-playground/validator/v10 v10.27.0
 	github.com/google/uuid v1.6.0
 	github.com/katallaxie/pkg v0.7.8-0.20250526120651-7c987012cd50
 	github.com/katallaxie/prompts v0.0.4
