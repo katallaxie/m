@@ -22,7 +22,7 @@ require (
 	github.com/katallaxie/pkg v0.7.8
 	github.com/katallaxie/prompts v0.0.4
 	github.com/lrstanley/bubblezone v1.0.0
-	github.com/mattn/go-sqlite3 v1.14.31
+	github.com/mattn/go-sqlite3 v1.14.32
 	github.com/muesli/ansi v0.0.0-20230316100256-276c6243b2f6
 	github.com/muesli/reflow v0.3.0
 	github.com/muesli/termenv v0.16.0
