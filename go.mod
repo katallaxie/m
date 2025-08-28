@@ -27,7 +27,7 @@ require (
 	github.com/muesli/reflow v0.3.0
 	github.com/muesli/termenv v0.16.0
 	github.com/pkg/errors v0.9.1
-	github.com/rivo/tview v0.0.0-20250325173046-7b72abf45814
+	github.com/rivo/tview v0.42.0
 	github.com/spf13/cobra v1.9.1
 	github.com/stretchr/testify v1.11.0
 	gopkg.in/yaml.v3 v3.0.1
