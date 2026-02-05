@@ -15,7 +15,7 @@ require (
 	github.com/charmbracelet/bubbles v0.21.1
 	github.com/charmbracelet/bubbletea v1.3.10
 	github.com/charmbracelet/lipgloss v1.1.0
-	github.com/charmbracelet/x/ansi v0.11.5
+	github.com/charmbracelet/x/ansi v0.11.6
 	github.com/gdamore/tcell/v2 v2.13.8
 	github.com/go-playground/validator/v10 v10.30.1
 	github.com/google/uuid v1.6.0
